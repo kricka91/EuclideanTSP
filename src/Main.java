@@ -57,7 +57,11 @@ public class Main {
 	
 	public static void main(String[] args) {
 		
+		boolean measureTime = true;
+		boolean drawSolution = true;
+		
 		Node[] nodes = null;
+		
 		if(args.length == 0) {
 			//read from System.in
 			nodes = readData();
@@ -90,12 +94,34 @@ public class Main {
 		
 		TSPSolver tsp = new TSPSolver();
 		
-		//get intial path
-		ArrayList<Integer> initialPath = tsp.getInitialPath(nodes);
+		ArrayList<Integer> initialPath;
+		ArrayList<Integer> improvedPath;
 		
-		//improve path
-		ArrayList<Integer> improvedPath = tsp.improvePath(initialPath, nodes);
-		
+		if(measureTime) {
+			long startTime = System.nanoTime();
+			//get intial path
+			initialPath = tsp.getInitialPath(nodes);
+			long endTime = System.nanoTime();
+			long timeElapsed = endTime-startTime;
+			long microSeconds = timeElapsed/1000;
+			//long milliSeconds = microSeconds/1000;
+			System.err.println("Time taken for initial path calculation (microseconds): " + microSeconds);
+			
+			//improve path
+			startTime = System.nanoTime();
+			improvedPath = tsp.improvePath(initialPath, nodes);
+			endTime = System.nanoTime();
+			timeElapsed = endTime-startTime;
+			microSeconds = timeElapsed/1000;
+			System.err.println("Improving path took (microseconds): " + microSeconds);
+			
+		} else {
+			//get intial path
+			initialPath = tsp.getInitialPath(nodes);
+			
+			//improve path
+			improvedPath = tsp.improvePath(initialPath, nodes);
+		}
 		
 		//print path
 		printPath(improvedPath);

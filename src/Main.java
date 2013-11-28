@@ -1,11 +1,14 @@
 import java.util.ArrayList;
 import java.util.Scanner;
-
+import java.util.Random;
 
 public class Main {
 	
 
-	
+	/**
+	 * Read data from System.in
+	 * @return An array of all nodes.
+	 */
 	public static Node[] readData() {
 		Scanner sc = new Scanner(System.in);
 		int n = sc.nextInt(); //n = number of nodes
@@ -27,6 +30,29 @@ public class Main {
 		}
 		return nodes;
 	}
+	
+	
+	public static Node[] genRandomProblem() {
+		Random r = new Random(); 
+		int n = r.nextInt(1000); //generate random n between 0 and 999
+		if(n < 10)
+			n = 10;
+		return genRandomProblem(n);
+	}
+	
+	/**
+	 * Generate a random problem with n nodes
+	 */
+	public static Node[] genRandomProblem(int n) {
+		Node[] nodes = new Node[n];
+		Random r = new Random();
+		for(int i = 0; i < n; i++) {
+			double x = r.nextDouble()*1000000; //scale up
+			double y = r.nextDouble()*1000000;
+			nodes[i] = new Node(x,y,n);
+		}
+		return nodes;
+	}
 
 	
 	public static void main(String[] args) {
@@ -35,9 +61,27 @@ public class Main {
 		if(args.length == 0) {
 			//read from System.in
 			nodes = readData();
+		} else {
+			//generate random TSP problem!
+			//syntax in arguments:
+			// 1. gen      - this generates a completely random problem with random amount of nodes (max 1000)
+			// 2. gen <integer> - this generates a random problem with <integer> number of nodes.
+			if(args[0].equals("gen")) {
+				int n = 100;
+				if(args.length > 1) {
+					nodes = genRandomProblem(Integer.parseInt(args[1]));
+				} else {
+					nodes = genRandomProblem();
+				}
+			}
 		}
 		
 		int n = nodes.length;
+		
+	    //for(int i = 0; i < n; i++) {
+	    //	System.out.print(nodes[i].x + "\t\t\t" + nodes[i].y + "\n");
+	    //}
+		
 		
 		// calculate all distances.
 		for(int i = 0; i < n; i++) {

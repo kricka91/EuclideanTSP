@@ -36,6 +36,10 @@ public class Node {
 		return (int) Math.round(Math.sqrt(Math.pow(n.x-x, 2) + Math.pow(n.y-y, 2)));
 	}
 	
+	public String toString() {
+		return "(" + x + " " + y + ")";
+	}
+	
 	
 	
 }

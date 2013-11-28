@@ -12,20 +12,12 @@ public class Main {
 	public static Node[] readData() {
 		Scanner sc = new Scanner(System.in);
 		int n = sc.nextInt(); //n = number of nodes
-		double minx = Integer.MIN_VALUE;
-		double miny = Integer.MIN_VALUE;
 		
 		//read data
 		Node[] nodes = new Node[n];
 		for(int i = 0; i < n; i++) {
 			double x = sc.nextDouble();
 			double y = sc.nextDouble();
-			if(x > minx) {
-				minx = x;
-			}
-			if(y > miny) {
-				miny = y;
-			}
 			nodes[i] = new Node(x,y,n);
 		}
 		return nodes;
@@ -122,6 +114,11 @@ public class Main {
 			//improve path
 			improvedPath = tsp.improvePath(initialPath, nodes);
 		}
+		
+		if(drawSolution) {
+			Graphical g = new Graphical(nodes, improvedPath);
+		}
+		
 		
 		//print path
 		printPath(improvedPath);

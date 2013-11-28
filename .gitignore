@@ -1,0 +1,9 @@
+# .class files
+*.class
+
+#for eclipse
+.classpath
+.project
+bin/
+
+

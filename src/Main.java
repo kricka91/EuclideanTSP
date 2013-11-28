@@ -4,30 +4,9 @@ import java.util.Scanner;
 
 public class Main {
 	
-	public static ArrayList<Integer> getInitialPath(Node[] allNodes) {
-		//TODO - now just returns a path 0,1,2,3,4...
-		ArrayList<Integer> path = new ArrayList<Integer>();
-		for(int i = 0; i < allNodes.length; i++) {
-			path.add(i);
-		}
-		return path;
-	}
+
 	
-	
-	/**
-	 * Improve intial path
-	 * @param path The path
-	 * @param allNodes
-	 * @return
-	 */
-	public static ArrayList<Integer> improvePath(ArrayList<Integer> path, Node[] allNodes) {
-		return path; //TODO
-	}
-	
-	public static void main(String[] args) {
-		
-		
-		
+	public static Node[] readData() {
 		Scanner sc = new Scanner(System.in);
 		int n = sc.nextInt(); //n = number of nodes
 		double minx = Integer.MIN_VALUE;
@@ -46,17 +25,32 @@ public class Main {
 			}
 			nodes[i] = new Node(x,y,n);
 		}
+		return nodes;
+	}
+
+	
+	public static void main(String[] args) {
+		
+		Node[] nodes = null;
+		if(args.length == 0) {
+			//read from System.in
+			nodes = readData();
+		}
+		
+		int n = nodes.length;
 		
 		// calculate all distances.
 		for(int i = 0; i < n; i++) {
 			nodes[i].calcDistances(nodes);
 		}
 		
+		TSPSolver tsp = new TSPSolver();
+		
 		//get intial path
-		ArrayList<Integer> initialPath = getInitialPath(nodes);
+		ArrayList<Integer> initialPath = tsp.getInitialPath(nodes);
 		
 		//improve path
-		ArrayList<Integer> improvedPath = improvePath(initialPath, nodes);
+		ArrayList<Integer> improvedPath = tsp.improvePath(initialPath, nodes);
 		
 		
 		//print path

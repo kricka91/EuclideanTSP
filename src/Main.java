@@ -14,7 +14,7 @@ public class Main {
 		double minx = Integer.MIN_VALUE;
 		double miny = Integer.MIN_VALUE;
 		
-		ArrayList<Node> nodes = new ArrayList<Node>();
+		Node[] nodes = new Node[n];
 		for(int i = 0; i < n; i++) {
 			double x = sc.nextDouble();
 			double y = sc.nextDouble();
@@ -24,12 +24,12 @@ public class Main {
 			if(y > miny) {
 				miny = y;
 			}
-			nodes.add(new Node(x,y,n));
+			nodes[i] = new Node(x,y,n);
 		}
 		
 		// calculate all distances.
 		for(int i = 0; i < n; i++) {
-			nodes.get(i).calcDistances(nodes);
+			nodes[i].calcDistances(nodes);
 		}
 		
 	

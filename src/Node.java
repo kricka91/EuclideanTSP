@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class Node {
 
 	final double x;
@@ -21,11 +19,11 @@ public class Node {
 	/**
 	 * Calculate all distances to all nodes.
 	 * Sets "distances" array.
-	 * @param allNodes ArrayList of all nodes (including this one).
+	 * @param allNodes array of all nodes (including this one).
 	 */
-	public void calcDistances(ArrayList<Node> allNodes) {
-		for(int i = 0; i < allNodes.size(); i++) {
-			distances[i] = distanceTo(allNodes.get(i));
+	public void calcDistances(Node[] allNodes) {
+		for(int i = 0; i < allNodes.length; i++) {
+			distances[i] = distanceTo(allNodes[i]);
 		}
 	}
 	

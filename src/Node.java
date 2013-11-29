@@ -23,7 +23,7 @@ public class Node {
 	 */
 	public void calcDistances(Node[] allNodes) {
 		for(int i = 0; i < allNodes.length; i++) {
-			distances[i] = distanceTo(allNodes[i]);
+			distances[i] = calcDistanceTo(allNodes[i]);
 		}
 	}
 	
@@ -32,7 +32,7 @@ public class Node {
 	 * @param n Other node
 	 * @return Euclidian distance
 	 */
-	public int distanceTo(Node n) {
+	public int calcDistanceTo(Node n) {
 		return (int) Math.round(Math.sqrt(Math.pow(n.x-x, 2) + Math.pow(n.y-y, 2)));
 	}
 	

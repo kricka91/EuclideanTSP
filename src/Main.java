@@ -23,6 +23,15 @@ public class Main {
 		return nodes;
 	}
 	
+	public static boolean sleep(int msDuration) {
+		try {
+			Thread.sleep(msDuration);
+			return true;
+		} catch (Exception e) {
+			//Do something, maybe
+			return false;
+		}
+	}
 	
 	public static Node[] genRandomProblem() {
 		Random r = new Random(); 
@@ -115,17 +124,29 @@ public class Main {
 			improvedPath = tsp.improvePath(initialPath, nodes);
 		}
 		
-		if(drawSolution) {
-			Graphical g = new Graphical(nodes, improvedPath);
-		}
-		
-		
 		//print path
 		printPath(improvedPath);
+		
+		if(drawSolution) {
+			Graphical g = new Graphical(nodes, improvedPath);
+			
+			/*
+			//Try this for an animation
+			sleep(1000);
+			Integer tmp = improvedPath.get(3);
+			improvedPath.set(3,improvedPath.get(7));
+			improvedPath.set(7, tmp);
+			g.updateContent(nodes, improvedPath);
+			sleep(1000);
+			improvedPath.remove(improvedPath.size()-1);
+			g.updateContent(nodes, improvedPath);
+			*/
+		}
+
 	}
 	
 	/**
-	 * Print final path
+	 * Print the path
 	 */
 	public static void printPath(ArrayList<Integer> path) {
 		for(int i = 0; i < path.size(); i++) {

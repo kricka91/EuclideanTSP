@@ -4,10 +4,17 @@ import java.awt.*;
 import javax.swing.*;
 
 public class Graphical {
-	private JFrame frame;
+	private Ganvas frame;
 	
 	public Graphical(Node[] nodes, ArrayList<Integer> path) {
 		frame = new Ganvas(nodes,path);
+	}
+	
+	/**
+	 * Update the graphics.
+	 */
+	public void updateContent(Node[] nodes, ArrayList<Integer> path) {
+		frame.updateContent(nodes, path);
 	}
 	
 	private class Ganvas extends JFrame {
@@ -16,13 +23,19 @@ public class Graphical {
 		Node[] scaledNodes;
 		ArrayList<Integer> path;
 		int maxCoord;
+
 		
 		public Ganvas(Node[] nodes, ArrayList<Integer> path) {
 			setTitle("drawing");
 			setSize(sizea+50,sizea+50);
 			setVisible(true);
+			updateContent(nodes, path);
+			setDefaultCloseOperation(EXIT_ON_CLOSE);
+		}
+		
+		public void updateContent(Node[] nodes, ArrayList<Integer> path) {
 			this.nodes = nodes;
-			this.path=path;
+			this.path = path;
 			
 			//calculate max coordinate
 			double max = 0;
@@ -40,21 +53,20 @@ public class Graphical {
 			//scale now
 			scaledNodes = new Node[nodes.length];
 			double scaleFactor = max/sizea;
-			
-			
+
 			for(int i = 0; i < nodes.length; i++) {
 				Node n = nodes[i];
 				scaledNodes[i] = new Node(n.x/scaleFactor, n.y/scaleFactor, n.n);
 				//System.err.println(scaledNodes[i]);
 			}
-			
-			
-			
-			
-			setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+			repaint();
 		}
 		
 		public void paint(Graphics g) {
+			g.setColor(Color.WHITE);
+			g.fillRect(0, 0, sizea+50, sizea+50);
+		
 			g.setColor(Color.BLACK);
 			
 			//g.fillOval(100, 100,5,5); //-2 is to place it in center

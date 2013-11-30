@@ -19,17 +19,6 @@ public class Node {
 	}
 	
 	/**
-	 * Calculate all distances to all nodes.
-	 * Sets "distances" array.
-	 * @param allNodes array of all nodes (including this one).
-	 */
-	public void calcDistances(Node[] allNodes) {
-		for(int i = 0; i < allNodes.length; i++) {
-			distances[i] = calcDistanceTo(allNodes[i]);
-		}
-	}
-	
-	/**
 	 * Calculate euclidian distance between this node and the given node, rounded to the nearest integer.
 	 * @param n Other node
 	 * @return Euclidian distance
@@ -40,6 +29,17 @@ public class Node {
 	
 	public String toString() {
 		return "(" + x + " " + y + ")";
+	}
+	
+	public static void calcAllDistances(Node[] allNodes) {
+		int n = allNodes.length;
+		for(int i = 0; i < n; i++) {
+			for(int j = i+1; j < n; j++) {
+				int dist = allNodes[i].calcDistanceTo(allNodes[j]);
+				allNodes[i].distances[j] = dist;
+				allNodes[j].distances[i] = dist;
+			}
+		}
 	}
 	
 	

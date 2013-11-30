@@ -3,7 +3,7 @@ import java.util.Scanner;
 import java.util.Random;
 
 public class Main {
-	private static boolean measureTime = true, drawSolution = true;
+	private static boolean measureTime = true, drawSolution = true, printSolution = false;
 	private static long startTime, endTime, partialTime;
 	private static ArrayList<String> partialTimeNames;
 	private static ArrayList<Long> partialTimes;
@@ -112,9 +112,8 @@ public class Main {
 		ArrayList<Integer> improvedPath;
 
 		// calculate all distances.
-		for(int i = 0; i < n; i++) {
-			nodes[i].calcDistances(nodes);
-		}
+		Node.calcAllDistances(nodes);
+		
 		createTimeStamp("distance computation");
 	
 		//get intial path
@@ -127,7 +126,8 @@ public class Main {
 		
 		//print path
 		System.err.println("Path size is: " + improvedPath.size());
-		//printPath(improvedPath);
+		if(printSolution)
+			printPath(improvedPath);
 		
 		if(drawSolution) {
 			Graphical g = new Graphical(nodes);

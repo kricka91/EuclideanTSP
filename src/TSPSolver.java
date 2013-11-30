@@ -6,6 +6,8 @@ import java.util.ArrayList;
  */
 public class TSPSolver {
 	
+	private boolean improv;
+	
 	public TSPSolver() {
 		
 	}
@@ -27,12 +29,18 @@ public class TSPSolver {
 	 */
 	public ArrayList<Integer> improvePath(ArrayList<Integer> path, Node[] allNodes) {
 		//return path; //TODO
-		return full2Opt(path,allNodes);
+		for(int i = 0; i< 10;i++) {
+			full2Opt(path,allNodes);
+			if(!improv)
+				break;
+		}
+		
+		return path;
 	}
 	
 	public ArrayList<Integer> full2Opt(ArrayList<Integer> path, Node[] nodes) {
 		int n = nodes.length;
-		
+		improv = false;
 		//@SuppressWarnings("unchecked")
 		//ArrayList<Integer> lpath = (ArrayList<Integer>) path.clone();
 		/*ArrayList<Integer> toCheck = new ArrayList<Integer>();
@@ -97,7 +105,8 @@ public class TSPSolver {
 				
 
 				if(swapped) {
-					i=0;
+					improv = true;
+					i--;
 					break;
 				}
 				

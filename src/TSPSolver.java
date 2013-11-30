@@ -29,11 +29,13 @@ public class TSPSolver {
 	 */
 	public ArrayList<Integer> improvePath(ArrayList<Integer> path, Node[] allNodes) {
 		//return path; //TODO
+		//int i = 0;
 		for(int i = 0; i< 10;i++) {
 			full2Opt(path,allNodes);
 			if(!improv)
 				break;
 		}
+		
 		
 		return path;
 	}

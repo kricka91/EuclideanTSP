@@ -12,14 +12,97 @@ public class TSPSolver {
 		
 	}
 	
+	public ArrayList<Integer> solve(Node[] allNodes) {
+		int n = allNodes.length;
+		int iters = 3;
+		ArrayList<Integer> bestPath = new ArrayList<Integer>();
+		int[] starts = new int[iters];
+		int hop = n/iters;
+		int current = 0;
+		for(int i = 0; i < iters; i++) {
+			starts[i] = current;
+			current += hop;
+		}
+		
+		long bestPathLength = Long.MAX_VALUE;
+		for(int i = 0; i < iters; i++) {
+			ArrayList<Integer> path = nearestNeighbor(allNodes,starts[i]);
+			improvePath(path,allNodes);
+			long len = getPathLength(path,allNodes);
+			if(len < bestPathLength) {
+				bestPathLength = len;
+				bestPath = path;
+			}
+		}
+		return bestPath;
+	}
+	
+	
 	public ArrayList<Integer> getInitialPath(Node[] allNodes) {
 		//TODO - now just returns a path 0,1,2,3,4...
-		ArrayList<Integer> path = new ArrayList<Integer>();
+		/*ArrayList<Integer> path = new ArrayList<Integer>();
 		for(int i = 0; i < allNodes.length; i++) {
 			path.add(i);
+		}*/
+		return nearestNeighbor(allNodes,0);
+	}
+	
+	
+	public ArrayList<Integer> nearestNeighbor(Node[] allNodes, int startNode) {
+		//start node is 0
+		//assumes calcClosest have been called on all
+		int n = allNodes.length;
+		
+		ArrayList<Integer> path = new ArrayList<Integer>();
+		boolean[] used = new boolean[n];
+		
+		//int startNode = 0;
+		path.add(startNode);
+		int last = startNode;
+		used[startNode] = true;
+		
+		for(int i = 1; i < n; i++) {
+			//find closest
+			int closest = findClosest(allNodes[last].closest, allNodes[last], used);
+			if(closest == -1) {
+				closest = findClosest(allNodes[last], used);
+			}
+			path.add(closest);
+			used[closest] = true;
+			last = closest;
 		}
 		return path;
 	}
+	
+	private int findClosest(Node node, boolean[] used) {
+		int n = node.n;
+		int[] possibilities = new int[n];
+		for(int i = 1; i < n; i++) {
+			possibilities[i] = i;
+		}
+		return findClosest(possibilities, node, used);
+	}
+	
+	private int findClosest(int[] possibilities, Node node, boolean[] used) {
+		int minDist = Integer.MAX_VALUE;
+		int minIndex = -1;
+		for(int i = 0; i < possibilities.length; i++) {
+			if(!used[possibilities[i]]) {
+				if(node.distances[possibilities[i]] < minDist) {
+					minDist = node.distances[possibilities[i]];
+					minIndex = possibilities[i];
+				}
+			}
+
+		}
+		return minIndex;
+	}
+	
+	
+	/*''''''''''''''''''''''''''''**********************************
+	 * Improving path below
+	 * *********************************************************
+	 */
 	
 	/**
 	 * Improve intial path

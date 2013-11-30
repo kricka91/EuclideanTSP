@@ -114,14 +114,19 @@ public class Main {
 		// calculate all distances.
 		Node.calcAllDistances(nodes);
 		
+		for(int i = 0; i < n; i++) {
+			nodes[i].calcClosest(10);
+		}
+		
 		createTimeStamp("distance computation");
 	
 		//get intial path
-		initialPath = tsp.getInitialPath(nodes);
-		createTimeStamp("initial path");
+		//initialPath = tsp.getInitialPath(nodes);
+		//createTimeStamp("initial path");
 
 		//improve path
-		improvedPath = tsp.improvePath(initialPath, nodes);
+		//improvedPath = tsp.improvePath(initialPath, nodes);
+		improvedPath = tsp.solve(nodes);
 		createTimeStamp("local search opt");
 		
 		//print path
@@ -131,7 +136,7 @@ public class Main {
 		
 		if(drawSolution) {
 			Graphical g = new Graphical(nodes);
-			g.updateContent(initialPath);
+			//g.updateContent(initialPath);
 			g.updateContent(improvedPath);
 		}
 		

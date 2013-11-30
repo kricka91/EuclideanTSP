@@ -111,6 +111,12 @@ public class Graphical extends JFrame {
 			g.drawOval((int)p.x-5+offset, (int)p.y-5+offset, 10, 10);
 			g.drawOval((int)p.x-5+offset, (int)p.y-5+offset, 11, 11);
 			g.drawOval((int)p.x-6+offset, (int)p.y-6+offset, 12, 12);
+			
+			g.setColor(Color.BLUE);
+			p = scaledNodes[path.get(1)];
+			g.drawOval((int)p.x-5+offset, (int)p.y-5+offset, 10, 10);
+			g.drawOval((int)p.x-5+offset, (int)p.y-5+offset, 11, 11);
+			g.drawOval((int)p.x-6+offset, (int)p.y-6+offset, 12, 12);
 		}
 	}
 	

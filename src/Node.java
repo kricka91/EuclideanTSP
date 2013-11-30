@@ -3,17 +3,19 @@ public class Node {
 	final double x;
 	final double y;
 	
+	final int index;
 	final int n;
 	
 	int[] distances;
 	
 	//Constructor
 	//n = number of nodes
-	public Node(double x, double y, int n) {
+	public Node(double x, double y, int n, int index) {
 		this.x = x;
 		this.y = y;
 		this.n = n;
 		distances = new int[n];
+		this.index = index;
 	}
 	
 	/**

@@ -63,7 +63,7 @@ public class Graphical extends JFrame {
 
 		for(int i = 0; i < nodes.length; i++) {
 			Node n = nodes[i];
-			scaledNodes[i] = new Node(n.x/scaleFactor, n.y/scaleFactor, n.n);
+			scaledNodes[i] = new Node(n.x/scaleFactor, n.y/scaleFactor, n.n,i);
 			//System.err.println(scaledNodes[i]);
 		}
 	}

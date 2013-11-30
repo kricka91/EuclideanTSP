@@ -3,7 +3,10 @@ import java.util.Scanner;
 import java.util.Random;
 
 public class Main {
-	
+	private static boolean measureTime = true, drawSolution = true;
+	private static long startTime, endTime, partialTime;
+	private static ArrayList<String> partialTimeNames;
+	private static ArrayList<Long> partialTimes;
 
 	/**
 	 * Read data from System.in
@@ -21,6 +24,20 @@ public class Main {
 			nodes[i] = new Node(x,y,n);
 		}
 		return nodes;
+	}
+	
+	/**
+	 * Call this to insert a measurement time stamp after a specific part
+	 * @param a name of the part
+	 */
+	private static void createTimeStamp(String name) {
+		if (measureTime) {
+			endTime = System.nanoTime();
+			partialTime = (endTime - startTime)/1000;
+			startTime = endTime;
+			partialTimeNames.add(name);
+			partialTimes.add(new Long(partialTime));
+		}
 	}
 	
 	public static boolean sleep(int msDuration) {
@@ -57,9 +74,11 @@ public class Main {
 
 	
 	public static void main(String[] args) {
-		
-		boolean measureTime = true;
-		boolean drawSolution = true;
+		if (measureTime) {
+			startTime = System.nanoTime();
+			partialTimeNames = new ArrayList<String>();
+			partialTimes = new ArrayList<Long>();
+		}
 		
 		Node[] nodes = null;
 		
@@ -87,62 +106,42 @@ public class Main {
 	    //	System.out.print(nodes[i].x + "\t\t\t" + nodes[i].y + "\n");
 	    //}
 		
-		
-		// calculate all distances.
-		for(int i = 0; i < n; i++) {
-			nodes[i].calcDistances(nodes);
-		}
-		
 		TSPSolver tsp = new TSPSolver();
 		
 		ArrayList<Integer> initialPath;
 		ArrayList<Integer> improvedPath;
-		
-		if(measureTime) {
-			long startTime = System.nanoTime();
-			//get intial path
-			initialPath = tsp.getInitialPath(nodes);
-			long endTime = System.nanoTime();
-			long timeElapsed = endTime-startTime;
-			long microSeconds = timeElapsed/1000;
-			//long milliSeconds = microSeconds/1000;
-			System.err.println("Time taken for initial path calculation (microseconds): " + microSeconds);
-			
-			//improve path
-			startTime = System.nanoTime();
-			improvedPath = tsp.improvePath(initialPath, nodes);
-			endTime = System.nanoTime();
-			timeElapsed = endTime-startTime;
-			microSeconds = timeElapsed/1000;
-			System.err.println("Improving path took (microseconds): " + microSeconds);
-			
-		} else {
-			//get intial path
-			initialPath = tsp.getInitialPath(nodes);
-			
-			//improve path
-			improvedPath = tsp.improvePath(initialPath, nodes);
+
+		// calculate all distances.
+		for(int i = 0; i < n; i++) {
+			nodes[i].calcDistances(nodes);
 		}
+		createTimeStamp("distance computation");
+	
+		//get intial path
+		initialPath = tsp.getInitialPath(nodes);
+		createTimeStamp("initial path");
+		
+		//improve path
+		improvedPath = tsp.improvePath(initialPath, nodes);
+		createTimeStamp("local search opt");
 		
 		//print path
-		printPath(improvedPath);
+		System.err.println("Path size is: " + improvedPath.size());
+		//printPath(improvedPath);
 		
 		if(drawSolution) {
-			Graphical g = new Graphical(nodes, improvedPath);
-			
-			/*
-			//Try this for an animation
-			sleep(1000);
-			Integer tmp = improvedPath.get(3);
-			improvedPath.set(3,improvedPath.get(7));
-			improvedPath.set(7, tmp);
-			g.updateContent(nodes, improvedPath);
-			sleep(1000);
-			improvedPath.remove(improvedPath.size()-1);
-			g.updateContent(nodes, improvedPath);
-			*/
+			Graphical g = new Graphical(nodes);
+			g.updateContent(initialPath);
+			g.updateContent(improvedPath);
 		}
-
+		
+		if (measureTime) {
+			//Print the times for each part
+			for(int i = 0; i < partialTimeNames.size(); i++) {
+				System.out.print("Part \"" + partialTimeNames.get(i) + "\" took ");
+				System.out.println(partialTimes.get(i) + " microseconds.");
+			}
+		}
 	}
 	
 	/**

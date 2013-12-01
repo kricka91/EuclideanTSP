@@ -128,6 +128,16 @@ public class Main {
 		//improvedPath = tsp.improvePath(initialPath, nodes);
 		improvedPath = tsp.solve(nodes);
 		createTimeStamp("local search opt");
+		System.err.println("Finished local search opt");
+		
+		//Compute convex hull
+		ArrayList<Integer> convexHull;
+		Node[] nodesCopy = (Node[])(nodes.clone());
+		convexHull = tsp.findConvexHull(nodesCopy);
+		System.err.println("Finished hull");
+		createTimeStamp("convex hull");
+
+		
 		
 		//print path
 		System.err.println("Path size is: " + improvedPath.size());
@@ -137,6 +147,7 @@ public class Main {
 		if(drawSolution) {
 			Graphical g = new Graphical(nodes);
 			//g.updateContent(initialPath);
+			g.updateContent(convexHull);
 			g.updateContent(improvedPath);
 		}
 		

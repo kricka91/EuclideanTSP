@@ -80,7 +80,7 @@ public class Graphical extends JFrame {
 		}
 		
 		g.setColor(Color.WHITE);
-		g.fillRect(0, 0, sizea+80, sizea+50);
+		g.fillRect(0, 0, sizea+50, sizea+50);
 
 		g.setColor(Color.BLACK);
 		
@@ -90,7 +90,8 @@ public class Graphical extends JFrame {
 		//draw nodes
 		for(int i = 0; i < nodes.length; i++) {
 			Node n = scaledNodes[i];
-			g.drawOval((int)n.x-2+offset, (int)n.y-2+offset, 4, 4); //-2 is to place it in center
+			g.drawOval((int)n.x-2+offset, (sizea-(int)n.y)-2+offset, 4, 4); //-2 is to place it in center
+			g.drawString("" + n.index, (int)n.x+offset-8, (sizea-(int)n.y)+offset-8);
 		}
 
 		if (!path.isEmpty()) {
@@ -100,23 +101,23 @@ public class Graphical extends JFrame {
 				Node p = scaledNodes[path.get(i-1)];
 				Node n = scaledNodes[path.get(i)];
 			
-				g.drawLine((int)p.x+offset, (int)p.y+offset, (int)n.x+offset, (int)n.y+offset);
+				g.drawLine((int)p.x+offset, (sizea-(int)p.y)+offset, (int)n.x+offset, (sizea-(int)n.y)+offset);
 			}
 
 			Node p = scaledNodes[path.get(0)];
 			Node n = scaledNodes[path.get(path.size()-1)];
-			g.drawLine((int)p.x+offset, (int)p.y+offset, (int)n.x+offset, (int)n.y+offset);
+			g.drawLine((int)p.x+offset, (sizea-(int)p.y)+offset, (int)n.x+offset, (sizea-(int)n.y)+offset);
 			
 			g.setColor(Color.GREEN);
-			g.drawOval((int)p.x-5+offset, (int)p.y-5+offset, 10, 10);
-			g.drawOval((int)p.x-5+offset, (int)p.y-5+offset, 11, 11);
-			g.drawOval((int)p.x-6+offset, (int)p.y-6+offset, 12, 12);
+			g.drawOval((int)p.x-5+offset, (sizea-(int)p.y)-5+offset, 10, 10);
+			g.drawOval((int)p.x-5+offset, (sizea-(int)p.y)-5+offset, 11, 11);
+			g.drawOval((int)p.x-6+offset, (sizea-(int)p.y)-6+offset, 12, 12);
 			
 			g.setColor(Color.BLUE);
 			p = scaledNodes[path.get(1)];
-			g.drawOval((int)p.x-5+offset, (int)p.y-5+offset, 10, 10);
-			g.drawOval((int)p.x-5+offset, (int)p.y-5+offset, 11, 11);
-			g.drawOval((int)p.x-6+offset, (int)p.y-6+offset, 12, 12);
+			g.drawOval((int)p.x-5+offset, (sizea-(int)p.y)-5+offset, 10, 10);
+			g.drawOval((int)p.x-5+offset, (sizea-(int)p.y)-5+offset, 11, 11);
+			g.drawOval((int)p.x-6+offset, (sizea-(int)p.y)-6+offset, 12, 12);
 		}
 	}
 	

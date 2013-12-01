@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.lang.Math;
 
 /**
  * Class for algorithms for solving TSP
@@ -37,8 +39,96 @@ public class TSPSolver {
 		return bestPath;
 	}
 	
+	/**
+	 * Computes the convex hull. Not complete yet.
+	 */
+	public ArrayList<Integer> findConvexHull(final Node[] allNodes) {
+		Arrays.sort(allNodes, allNodes[0].new NodeLexComparator());
+		for (int i = 0;i<allNodes.length;i++) {
+			System.err.println("Node " + i + " (index: " + allNodes[i].index + "): (" + allNodes[i].x + ", " + allNodes[i].y + ")");
+		}
+		ArrayList<Integer> upper = new ArrayList<Integer>(), lower = new ArrayList<Integer>();
+		
+		for (int i = 0;i<allNodes.length;i++) {
+			Node current = allNodes[i];
+			while (lower.size() >= 2) {
+				//Check whether clockwise or counter-clockwise path
+				Node last = allNodes[lower.get(lower.size()-1).intValue()];
+				Node secLast = allNodes[lower.get(lower.size()-2).intValue()];
+				if (cross(secLast, last, current) > 0) {
+					lower.remove(lower.size()-1);
+				} else {
+					break;
+				}
+			}
+			lower.add(current.index);
+		}
+
+		for (int i = allNodes.length-1; i>=0 ;i--) {
+			Node current = allNodes[i];
+			while (upper.size() >= 2) {
+				//Check whether clockwise or counter-clockwise path
+				Node last = allNodes[upper.get(upper.size()-1).intValue()];
+				Node secLast = allNodes[upper.get(upper.size()-2).intValue()];
+				if (cross(secLast, last, current) > 0) {
+					upper.remove(upper.size()-1);
+				} else {
+					break;
+				}
+			}
+			upper.add(current.index);
+		}
+
+		ArrayList<Integer> hull = new ArrayList<Integer>();
+		for (int i = 0;i<lower.size()-1;i++) {
+			hull.add(lower.get(i));
+		}
+		for (int i = 0;i<upper.size()-1;i++) {
+			hull.add(upper.get(i));
+		}
+		
+		for (int i = 0;i<hull.size();i++) {
+			System.err.println(hull.get(i));
+		}
+
+		return hull;
+	}
 	
-	public ArrayList<Integer> getInitialPath(Node[] allNodes) {
+	double cross(Node o, Node a, Node b) {
+        return (a.x-o.x)*(b.y-o.y)-(a.y-o.y)*(b.x-o.x);
+	}
+	
+	/*
+	//Divide and conquer
+	public ArrayList<Integer> findConvexHull(Node[] allNodes) {
+		ArrayList<Node> all = new ArrayList<Node>().addAll(allNodes);
+		Collections.sort(all, new NodeLexComparator());
+		
+		ArrayList<Node> hull = findConvexHull();
+		ArrayList<Integer> res = new ArrayList<Integer>();
+		for(int i = 0; i < hull.size(); i++) {
+			res.add(hull.get(i).index);
+		}
+	}
+	
+	public ArrayList<Node> findConvexHull(ArrayList<Node> nodes) {
+		//For three or fewer points, the convex hull has to be all points
+		if (nodes.size() <= 3) {
+			return nodes;
+		}
+		
+		ArrayList<Node> leftHull, rightHull;
+		int half = nodes.size()/2;
+		leftHull = nodes.subList(0, half);
+		rightHull = nodes.subList(half, nodes.size()-1);
+		
+		
+		//TODO
+		
+	}
+	*/
+	
+	public ArrayList<Integer> getInitialPath(final Node[] allNodes) {
 		//TODO - now just returns a path 0,1,2,3,4...
 		/*ArrayList<Integer> path = new ArrayList<Integer>();
 		for(int i = 0; i < allNodes.length; i++) {
@@ -48,7 +138,7 @@ public class TSPSolver {
 	}
 	
 	
-	public ArrayList<Integer> nearestNeighbor(Node[] allNodes, int startNode) {
+	public ArrayList<Integer> nearestNeighbor(final Node[] allNodes, int startNode) {
 		//start node is 0
 		//assumes calcClosest have been called on all
 		int n = allNodes.length;
@@ -110,7 +200,7 @@ public class TSPSolver {
 	 * @param allNodes
 	 * @return
 	 */
-	public ArrayList<Integer> improvePath(ArrayList<Integer> path, Node[] allNodes) {
+	public ArrayList<Integer> improvePath(ArrayList<Integer> path, final Node[] allNodes) {
 		//return path; //TODO
 		//int i = 0;
 		for(int i = 0; i< 10;i++) {
@@ -123,7 +213,7 @@ public class TSPSolver {
 		return path;
 	}
 	
-	public ArrayList<Integer> full2Opt(ArrayList<Integer> path, Node[] nodes) {
+	public ArrayList<Integer> full2Opt(ArrayList<Integer> path, final Node[] nodes) {
 		int n = nodes.length;
 		improv = false;
 		//@SuppressWarnings("unchecked")
@@ -208,7 +298,7 @@ public class TSPSolver {
 		path.set(j, tmp);
 	}
 	
-	public long getPathLength(ArrayList<Integer> path, Node[] nodes) {
+	public long getPathLength(ArrayList<Integer> path, final Node[] nodes) {
 		long len = 0;
 		int n = nodes.length;
 		for(int i = 1; i < n; i++) {

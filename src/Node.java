@@ -36,11 +36,10 @@ public class Node {
 	}
 	
 	public void calcClosest(int x) {
-		if(x > n-1)
+		if(x > n-1) {
 		    x = n-1;
-		
-		
-		
+		}
+
 		closest = new int[x];
 		int i;
 		int numPlaced = 0;

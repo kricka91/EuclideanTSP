@@ -95,43 +95,89 @@ public class TSPSolver {
 		return hull;
 	}
 	
+	/**
+	 * Computes the signed area of the triangle oab
+	 *
+	 * The sign determines whether the turn oab is clockwise or counter-clockwise.
+	 */
 	double cross(Node o, Node a, Node b) {
 		double res = (a.x-o.x)*(b.y-o.y)-(a.y-o.y)*(b.x-o.x);
-		String sign = (res >= 0) ? "non-negative" : "negative";
-		System.err.println("cross of " + o + ", " + a + " and " + b + " is: " + sign);
-		
+		//String sign = (res >= 0) ? "non-negative" : "negative";
+		//System.err.println("cross of " + o + ", " + a + " and " + b + " is: " + sign);
 		return res;
 	}
 	
-	/*
-	//Divide and conquer
-	public ArrayList<Integer> findConvexHull(Node[] allNodes) {
-		ArrayList<Node> all = new ArrayList<Node>().addAll(allNodes);
-		Collections.sort(all, new NodeLexComparator());
+	/**
+	 * Add the remaining nodes to a pre-existing subpath
+	 */
+	public ArrayList<Integer> addRemainingNodes(Node[] nodes, ArrayList<Integer> visited) {
 		
-		ArrayList<Node> hull = findConvexHull();
 		ArrayList<Integer> res = new ArrayList<Integer>();
-		for(int i = 0; i < hull.size(); i++) {
-			res.add(hull.get(i).index);
+		res.addAll(visited);
+		int cheapest;
+		int insNode, insNeighbor;
+		int curLoss;
+		
+		ArrayList<Integer> remaining = new ArrayList<Integer>();
+		for (int i = 0;i<nodes.length;i++) {
+			if (visited.contains(new Integer(nodes[i].index))) {
+				//Do nothing
+			} else {
+				remaining.add(new Integer(nodes[i].index));
+			}
 		}
-	}
-	
-	public ArrayList<Node> findConvexHull(ArrayList<Node> nodes) {
-		//For three or fewer points, the convex hull has to be all points
-		if (nodes.size() <= 3) {
-			return nodes;
+		
+		System.err.println("visited contains:");
+		for (int i = 0;i<visited.size();i++) {
+			System.err.println(visited.get(i));
 		}
 		
-		ArrayList<Node> leftHull, rightHull;
-		int half = nodes.size()/2;
-		leftHull = nodes.subList(0, half);
-		rightHull = nodes.subList(half, nodes.size()-1);
+		System.err.println("remaining contains:");
+		for (int i = 0;i<remaining.size();i++) {
+			System.err.println(remaining.get(i));
+		}
 		
 		
-		//TODO
+		while (!remaining.isEmpty()) {
 		
+			cheapest = Integer.MAX_VALUE;
+			insNode = -1;
+			insNeighbor = -1;
+		
+			for (int i = 0;i<remaining.size();i++) {
+				for (int j = 0;j<res.size()-1;j++) {
+					curLoss = nodes[remaining.get(i)].distances[res.get(j)];
+					curLoss += nodes[remaining.get(i)].distances[res.get(j+1)];
+					curLoss -= nodes[res.get(j)].distances[res.get(j+1)];
+					
+					if (curLoss < cheapest) {
+						cheapest = curLoss;
+						insNode = i;
+						insNeighbor = j;
+					}
+				}
+				
+				curLoss = nodes[remaining.get(i)].distances[res.get(res.size()-1)];
+				curLoss += nodes[remaining.get(i)].distances[res.get(0)];
+				curLoss -= nodes[res.get(res.size()-1)].distances[res.get(0)];
+				
+				if (curLoss < cheapest) {
+					cheapest = curLoss;
+					insNode = i;
+					insNeighbor = res.size()-1;
+				}
+				
+			}
+			
+			System.err.print("Want to visit node: " + remaining.get(insNode) + " between " + res.get(insNeighbor));
+			System.err.println(" and " + res.get((insNeighbor+1)%(res.size())));
+			res.add(insNeighbor-1, remaining.get(insNode));
+			remaining.remove(insNode);
+		}
+		
+		return res;
 	}
-	*/
+
 	
 	public ArrayList<Integer> getInitialPath(final Node[] allNodes) {
 		//TODO - now just returns a path 0,1,2,3,4...

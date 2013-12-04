@@ -107,56 +107,67 @@ public class Main {
 	    //}
 		
 		TSPSolver tsp = new TSPSolver();
-		
-		ArrayList<Integer> initialPath;
-		ArrayList<Integer> improvedPath;
-		ArrayList<Integer> bestPath;
+		ArrayList<Integer> path;
+
+		Graphical g = new Graphical(nodes);
 
 		// calculate all distances.
 		Node.calcAllDistances(nodes);
-		
 		for(int i = 0; i < n; i++) {
 			nodes[i].calcClosest(10);
 		}
-		
 		createTimeStamp("distance computation");
-	
+
+
 		//get intial path
-		initialPath = tsp.getInitialPath(nodes);
+		path = tsp.getInitialPath(nodes);
 		createTimeStamp("initial path");
 
 		//improve path
-		improvedPath = tsp.improvePath(initialPath, nodes);
+		path = tsp.improvePath(path, nodes);
 		//improvedPath = tsp.solve(nodes);
 		//createTimeStamp("local search opt");
 		createTimeStamp("2 opt");
 		
-		bestPath = tsp.s3opt(improvedPath, nodes);
+		path = tsp.s3opt(path, nodes);
 		createTimeStamp("3 opt");
 		System.err.println("Finished local search opt");
+
+		//improve path
+		//path = tsp.improvePath(path, nodes);
+		//path = tsp.solve(nodes);
+		if(drawSolution) {
+			g.updateContent(path);
+		}
+		//createTimeStamp("solve with local search opt");
 		
 		//Compute convex hull
 		ArrayList<Integer> convexHull;
 		Node[] nodesCopy = (Node[])(nodes.clone());
-		//convexHull = tsp.findConvexHull(nodesCopy);
-		System.err.println("Finished hull");
+		convexHull = tsp.findConvexHull(nodesCopy);
+		if(drawSolution) {
+			g.updateContent(convexHull);
+		}
 		createTimeStamp("convex hull");
-
 		
+		//Add the rest of the nodes
+		ArrayList<Integer> completePath;
+		//completePath = tsp.addRemainingNodes(nodes, convexHull);
+		if(drawSolution) {
+			//g.updateContent(completePath);
+		}
+		createTimeStamp("adding remaining nodes to path");
 		
 		//print path
-		System.err.println("Path size is: " + improvedPath.size());
-		if(printSolution)
-			printPath(improvedPath);
-		
-		if(drawSolution) {
-			Graphical g = new Graphical(nodes);
-			g.updateContent(initialPath);
-			//g.updateContent(convexHull);
-			//g.updateContent(improvedPath);
-			//g.updateContent(bestPath);
+		System.err.println("Path size is: " + path.size());
+		if(printSolution) {
+			//printPath(improvedPath);
 		}
 		
+		if(drawSolution) {
+			g.showG();
+		}
+
 		if (measureTime) {
 			//Print the times for each part
 			for(int i = 0; i < partialTimeNames.size(); i++) {

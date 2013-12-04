@@ -16,7 +16,6 @@ public class Graphical extends JFrame {
 	public Graphical(Node[] nodes) {
 		setTitle("drawing");
 		setSize(sizea+80,sizea+90);
-		setVisible(true);
 		
 		JPanel buttonPane = new JPanel();
 		add(buttonPane, BorderLayout.PAGE_END);
@@ -37,7 +36,7 @@ public class Graphical extends JFrame {
 		});
 		buttonPane.add(animate);
 
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
 		steps = new ArrayList<ArrayList<Integer>>();
 		steps.add(new ArrayList<Integer>());
 
@@ -68,8 +67,15 @@ public class Graphical extends JFrame {
 		}
 	}
 
+	public void showG() {
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setVisible(true);
+	}
+
 	public void updateContent(ArrayList<Integer> path) {
-		steps.add(path);
+		ArrayList<Integer> pathClone = new ArrayList<Integer>();
+		pathClone.addAll(path);
+		steps.add(pathClone);
 		this.path = steps.get(0);
 		repaint();
 	}
@@ -78,6 +84,8 @@ public class Graphical extends JFrame {
 		if (path == null || curStep == -1) {
 			return;
 		}
+		
+		boolean writeNumbers = (nodes.length > 100) ? false :  true;
 		
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, sizea+50, sizea+50);
@@ -91,7 +99,9 @@ public class Graphical extends JFrame {
 		for(int i = 0; i < nodes.length; i++) {
 			Node n = scaledNodes[i];
 			g.drawOval((int)n.x-2+offset, (sizea-(int)n.y)-2+offset, 4, 4); //-2 is to place it in center
-			g.drawString("" + n.index, (int)n.x+offset-8, (sizea-(int)n.y)+offset-8);
+			if (writeNumbers) {
+				g.drawString("" + n.index, (int)n.x+offset-8, (sizea-(int)n.y)+offset-8);
+			}
 		}
 
 		if (!path.isEmpty()) {

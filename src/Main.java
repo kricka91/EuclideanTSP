@@ -146,7 +146,7 @@ public class Main {
 		Node[] nodesCopy = (Node[])(nodes.clone());
 		convexHull = tsp.findConvexHull(nodesCopy);
 		if(drawSolution) {
-			g.updateContent(convexHull);
+			//g.updateContent(convexHull);
 		}
 		createTimeStamp("convex hull");
 		
@@ -164,7 +164,14 @@ public class Main {
 			//printPath(improvedPath);
 		}
 		
+		System.err.println("length of 3opt path: " + tsp.getPathLength(path, nodes));
+		System.err.println("length of convex path: " + tsp.getPathLength(completePath, nodes));
 		
+		tsp.improvePath(completePath, nodes);
+		
+		System.err.println("length of 2opted convex path: " + tsp.getPathLength(completePath, nodes));
+		tsp.s3opt(completePath, nodes);
+		System.err.println("length of 3opted convex path: " + tsp.getPathLength(completePath, nodes));
 		
 		if(drawSolution) {
 			g.showG();

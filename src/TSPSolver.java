@@ -404,9 +404,9 @@ public class TSPSolver {
 					//0 == dont swap, 1 == swap forward, 2 == swap backward
 					
 					if(swap != 0) {
-						System.err.println("ARG "+ n1 + " " + n2 + " " + n3);
+						//System.err.println("ARG "+ n1 + " " + n2 + " " + n3);
 						//System.err.println("INdex "+ inIndex[n1] + " " + inIndex[n2] + " " + inIndex[n3]);
-						System.err.println("LENGTH BEFORE: " + getPathLength(path,nodes));
+						//System.err.println("LENGTH BEFORE: " + getPathLength(path,nodes));
 						swapped = true;
 					}
 						
@@ -426,7 +426,7 @@ public class TSPSolver {
 					}
 					if(swap != 0) {
 						//System.err.println("ARG "+ n1 + " " + n2 + " " + n3);
-						System.err.println("LENGTH AFTER: " + getPathLength(path,nodes));
+						//System.err.println("LENGTH AFTER: " + getPathLength(path,nodes));
 						//System.err.println(path);
 						//for(int a = 0; a < inIndex.length; a++) {
 						//	System.err.print(inIndex[a] + " ");

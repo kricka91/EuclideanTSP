@@ -30,7 +30,9 @@ public class Node {
 	}
 	
 	public String toString() {
-		return "(" + x + " " + y + ")";
+		//return "(" + x + " " + y + ")";
+		//return "Node: {index = " + index + ", position: {x = " + x + ", y = " + y + "} }";
+		return "Node " + index;
 	}
 	
 	public void calcClosest(int x) {
@@ -81,10 +83,6 @@ public class Node {
 			}
 		}
 	}
-	
-	
-	
-	
 	
 	public class NodeLexComparator implements Comparator<Node> {
    		public int compare(Node node1, Node node2) {

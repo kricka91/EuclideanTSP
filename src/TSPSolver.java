@@ -45,46 +45,47 @@ public class TSPSolver {
 	public ArrayList<Integer> findConvexHull(final Node[] allNodes) {
 		Arrays.sort(allNodes, allNodes[0].new NodeLexComparator());
 		for (int i = 0;i<allNodes.length;i++) {
-			System.err.println("Node " + i + " (index: " + allNodes[i].index + "): (" + allNodes[i].x + ", " + allNodes[i].y + ")");
+			System.err.println(allNodes[i].toString());
 		}
-		ArrayList<Integer> upper = new ArrayList<Integer>(), lower = new ArrayList<Integer>();
+		ArrayList<Node> upper = new ArrayList<Node>(), lower = new ArrayList<Node>();
+		Node current, last, secLast;
 		
 		for (int i = 0;i<allNodes.length;i++) {
-			Node current = allNodes[i];
+			current = allNodes[i];
 			while (lower.size() >= 2) {
 				//Check whether clockwise or counter-clockwise path
-				Node last = allNodes[lower.get(lower.size()-1).intValue()];
-				Node secLast = allNodes[lower.get(lower.size()-2).intValue()];
-				if (cross(secLast, last, current) > 0) {
+				last = lower.get(lower.size()-1);
+				secLast = lower.get(lower.size()-2);
+				if (cross(secLast, last, current) <= 0) {
 					lower.remove(lower.size()-1);
 				} else {
 					break;
 				}
 			}
-			lower.add(current.index);
+			lower.add(current);
 		}
 
 		for (int i = allNodes.length-1; i>=0 ;i--) {
-			Node current = allNodes[i];
+			current = allNodes[i];
 			while (upper.size() >= 2) {
 				//Check whether clockwise or counter-clockwise path
-				Node last = allNodes[upper.get(upper.size()-1).intValue()];
-				Node secLast = allNodes[upper.get(upper.size()-2).intValue()];
-				if (cross(secLast, last, current) > 0) {
+				last = upper.get(upper.size()-1);
+				secLast = upper.get(upper.size()-2);
+				if (cross(secLast, last, current) <= 0) {
 					upper.remove(upper.size()-1);
 				} else {
 					break;
 				}
 			}
-			upper.add(current.index);
+			upper.add(current);
 		}
 
 		ArrayList<Integer> hull = new ArrayList<Integer>();
 		for (int i = 0;i<lower.size()-1;i++) {
-			hull.add(lower.get(i));
+			hull.add(lower.get(i).index);
 		}
 		for (int i = 0;i<upper.size()-1;i++) {
-			hull.add(upper.get(i));
+			hull.add(upper.get(i).index);
 		}
 		
 		for (int i = 0;i<hull.size();i++) {
@@ -95,7 +96,11 @@ public class TSPSolver {
 	}
 	
 	double cross(Node o, Node a, Node b) {
-        return (a.x-o.x)*(b.y-o.y)-(a.y-o.y)*(b.x-o.x);
+		double res = (a.x-o.x)*(b.y-o.y)-(a.y-o.y)*(b.x-o.x);
+		String sign = (res >= 0) ? "non-negative" : "negative";
+		System.err.println("cross of " + o + ", " + a + " and " + b + " is: " + sign);
+		
+		return res;
 	}
 	
 	/*

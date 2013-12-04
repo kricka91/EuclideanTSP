@@ -7,6 +7,8 @@ public class Main {
 	private static long startTime, endTime, partialTime;
 	private static ArrayList<String> partialTimeNames;
 	private static ArrayList<Long> partialTimes;
+	private static ArrayList<ArrayList<Integer>> partRes;
+	private static ArrayList<String> partResNames;
 
 	/**
 	 * Read data from System.in
@@ -37,6 +39,15 @@ public class Main {
 			startTime = endTime;
 			partialTimeNames.add(name);
 			partialTimes.add(new Long(partialTime));
+		}
+	}
+	
+	private static void addPartRes(String phaseName, ArrayList<Integer> path) {
+		if (drawSolution) {
+			ArrayList<Integer> pathClone = new ArrayList<Integer>();
+			pathClone.addAll(path);
+			partRes.add(pathClone);
+			partResNames.add(phaseName);
 		}
 	}
 	
@@ -81,6 +92,10 @@ public class Main {
 		}
 		
 		Node[] nodes = null;
+		partRes = new ArrayList<ArrayList<Integer>>();
+		partRes.add(new ArrayList<Integer>());	//Add empty path
+		partResNames = new ArrayList<String>();
+		partResNames.add("Start");
 		
 		if(args.length == 0) {
 			//read from System.in
@@ -88,7 +103,7 @@ public class Main {
 		} else {
 			//generate random TSP problem!
 			//syntax in arguments:
-			// 1. gen      - this generates a completely random problem with random amount of nodes (max 1000)
+			// 1. gen - this generates a completely random problem with random amount of nodes (max 1000)
 			// 2. gen <integer> - this generates a random problem with <integer> number of nodes.
 			if(args[0].equals("gen")) {
 				int n = 100;
@@ -109,7 +124,6 @@ public class Main {
 		TSPSolver tsp = new TSPSolver();
 		ArrayList<Integer> path;
 
-		Graphical g = new Graphical(nodes);
 
 		// calculate all distances.
 		Node.calcAllDistances(nodes);
@@ -121,45 +135,39 @@ public class Main {
 
 		//get intial path
 		path = tsp.getInitialPath(nodes);
+		addPartRes("initial path", path);
 		createTimeStamp("initial path");
 
 		//improve path
 		path = tsp.improvePath(path, nodes);
 		//improvedPath = tsp.solve(nodes);
 		//createTimeStamp("local search opt");
+		addPartRes("2 opt", path);
 		createTimeStamp("2 opt");
 		
 		path = tsp.s3opt(path, nodes);
+		addPartRes("3 opt", path);
 		createTimeStamp("3 opt");
-		System.err.println("Finished local search opt");
 
 		//improve path
 		//path = tsp.improvePath(path, nodes);
 		//path = tsp.solve(nodes);
-		if(drawSolution) {
-			g.updateContent(path);
-		}
 		//createTimeStamp("solve with local search opt");
 		
 		//Compute convex hull
 		ArrayList<Integer> convexHull;
 		Node[] nodesCopy = (Node[])(nodes.clone());
 		convexHull = tsp.findConvexHull(nodesCopy);
-		if(drawSolution) {
-			//g.updateContent(convexHull);
-		}
+		addPartRes("convex hull", convexHull);
 		createTimeStamp("convex hull");
 		
 		//Add the rest of the nodes
 		ArrayList<Integer> completePath;
 		completePath = tsp.addRemainingNodes(nodes, convexHull);
-		if(drawSolution) {
-			g.updateContent(completePath);
-		}
+		addPartRes("adding remaining nodes to path", completePath);
 		createTimeStamp("adding remaining nodes to path");
 		
 		//print path
-		System.err.println("Path size is: " + path.size());
 		if(printSolution) {
 			//printPath(improvedPath);
 		}
@@ -174,7 +182,8 @@ public class Main {
 		System.err.println("length of 3opted convex path: " + tsp.getPathLength(completePath, nodes));
 		
 		if(drawSolution) {
-			g.showG();
+			Graphical g = new Graphical(nodes);
+			g.updateContent(partRes, partResNames);
 		}
 
 		if (measureTime) {

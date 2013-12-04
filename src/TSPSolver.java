@@ -89,7 +89,7 @@ public class TSPSolver {
 		}
 		
 		for (int i = 0;i<hull.size();i++) {
-			System.err.println(hull.get(i));
+			//System.err.println(hull.get(i));
 		}
 
 		return hull;
@@ -353,7 +353,7 @@ public class TSPSolver {
 	
 	public long getPathLength(ArrayList<Integer> path, final Node[] nodes) {
 		long len = 0;
-		int n = nodes.length;
+		int n = path.size();
 		for(int i = 1; i < n; i++) {
 			len += nodes[path.get(i-1)].distances[path.get(i)];
 		}

@@ -5,17 +5,21 @@ import javax.swing.*;
 
 public class Graphical extends JFrame {
 	ArrayList<ArrayList<Integer>> steps;
+	ArrayList<String> stepNames;
 	int sizea = 600;
 	int curStep;
 	Node[] nodes;
 	Node[] scaledNodes;
 	ArrayList<Integer> path;
+	String curStepName;
 	int maxCoord;
 	JButton nextStep, animate;
 	
 	public Graphical(Node[] nodes) {
-		setTitle("drawing");
+		setTitle("TSP path");
 		setSize(sizea+80,sizea+90);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setVisible(true);
 		
 		JPanel buttonPane = new JPanel();
 		add(buttonPane, BorderLayout.PAGE_END);
@@ -35,10 +39,6 @@ public class Graphical extends JFrame {
 			}
 		});
 		buttonPane.add(animate);
-
-		
-		steps = new ArrayList<ArrayList<Integer>>();
-		steps.add(new ArrayList<Integer>());
 
 		this.nodes = nodes;
 		this.curStep = -1;
@@ -67,17 +67,15 @@ public class Graphical extends JFrame {
 		}
 	}
 
-	public void showG() {
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setVisible(true);
-	}
-
-	public void updateContent(ArrayList<Integer> path) {
-		ArrayList<Integer> pathClone = new ArrayList<Integer>();
-		pathClone.addAll(path);
-		steps.add(pathClone);
-		this.path = steps.get(0);
+	public void updateContent(ArrayList<ArrayList<Integer>> paths, ArrayList<String> names) {
+		this.steps = paths;
+		this.path = steps.get(steps.size()-1);
+		this.stepNames = names;
+		this.curStepName = stepNames.get(stepNames.size()-1);
 		repaint();
+		
+		System.err.println("Size of parameters: " + paths.size() + ", and " + names.size());
+		
 	}
 	
 	public void paint(Graphics g) {
@@ -88,9 +86,15 @@ public class Graphical extends JFrame {
 		boolean writeNumbers = (nodes.length > 100) ? false :  true;
 		
 		g.setColor(Color.WHITE);
-		g.fillRect(0, 0, sizea+50, sizea+50);
+		g.fillRect(0, 0, sizea+80, sizea+50);
 
 		g.setColor(Color.BLACK);
+		g.drawString(curStepName, 4, 40);
+		
+		if (!path.isEmpty()) {
+			long length = new TSPSolver().getPathLength(path, nodes);
+			g.drawString("Path length: " + length, 4, 60);
+		}
 		
 		//g.fillOval(100, 100,5,5); //-2 is to place it in center
 		int offset = 35;
@@ -151,6 +155,7 @@ public class Graphical extends JFrame {
 			nextStep.setText("Show next step.");
 		}
 		path = steps.get(curStep);
+		curStepName = stepNames.get(curStep);
 		repaint();
 	}
 }

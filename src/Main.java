@@ -110,6 +110,7 @@ public class Main {
 		
 		ArrayList<Integer> initialPath;
 		ArrayList<Integer> improvedPath;
+		ArrayList<Integer> bestPath;
 
 		// calculate all distances.
 		Node.calcAllDistances(nodes);
@@ -121,19 +122,23 @@ public class Main {
 		createTimeStamp("distance computation");
 	
 		//get intial path
-		//initialPath = tsp.getInitialPath(nodes);
-		//createTimeStamp("initial path");
+		initialPath = tsp.getInitialPath(nodes);
+		createTimeStamp("initial path");
 
 		//improve path
-		//improvedPath = tsp.improvePath(initialPath, nodes);
-		improvedPath = tsp.solve(nodes);
-		createTimeStamp("local search opt");
+		improvedPath = tsp.improvePath(initialPath, nodes);
+		//improvedPath = tsp.solve(nodes);
+		//createTimeStamp("local search opt");
+		createTimeStamp("2 opt");
+		
+		bestPath = tsp.s3opt(improvedPath, nodes);
+		createTimeStamp("3 opt");
 		System.err.println("Finished local search opt");
 		
 		//Compute convex hull
 		ArrayList<Integer> convexHull;
 		Node[] nodesCopy = (Node[])(nodes.clone());
-		convexHull = tsp.findConvexHull(nodesCopy);
+		//convexHull = tsp.findConvexHull(nodesCopy);
 		System.err.println("Finished hull");
 		createTimeStamp("convex hull");
 
@@ -146,9 +151,10 @@ public class Main {
 		
 		if(drawSolution) {
 			Graphical g = new Graphical(nodes);
-			//g.updateContent(initialPath);
-			g.updateContent(convexHull);
-			g.updateContent(improvedPath);
+			g.updateContent(initialPath);
+			//g.updateContent(convexHull);
+			//g.updateContent(improvedPath);
+			//g.updateContent(bestPath);
 		}
 		
 		if (measureTime) {

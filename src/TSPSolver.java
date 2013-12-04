@@ -45,7 +45,7 @@ public class TSPSolver {
 	public ArrayList<Integer> findConvexHull(final Node[] allNodes) {
 		Arrays.sort(allNodes, allNodes[0].new NodeLexComparator());
 		for (int i = 0;i<allNodes.length;i++) {
-			System.err.println(allNodes[i].toString());
+			//System.err.println(allNodes[i].toString());
 		}
 		ArrayList<Node> upper = new ArrayList<Node>(), lower = new ArrayList<Node>();
 		Node current, last, secLast;
@@ -127,6 +127,7 @@ public class TSPSolver {
 			}
 		}
 		
+		/*
 		System.err.println("visited contains:");
 		for (int i = 0;i<visited.size();i++) {
 			System.err.println(visited.get(i));
@@ -136,7 +137,7 @@ public class TSPSolver {
 		for (int i = 0;i<remaining.size();i++) {
 			System.err.println(remaining.get(i));
 		}
-		
+		*/
 		
 		while (!remaining.isEmpty()) {
 		
@@ -169,9 +170,10 @@ public class TSPSolver {
 				
 			}
 			
-			System.err.print("Want to visit node: " + remaining.get(insNode) + " between " + res.get(insNeighbor));
-			System.err.println(" and " + res.get((insNeighbor+1)%(res.size())));
-			res.add(insNeighbor-1, remaining.get(insNode));
+			//System.err.print("Want to visit node: " + remaining.get(insNode));
+			//System.err.print(" between " + res.get(insNeighbor) + " and ");
+			//System.err.println("" + res.get((insNeighbor+1)%(res.size())));
+			res.add(insNeighbor+1, remaining.get(insNode));
 			remaining.remove(insNode);
 		}
 		

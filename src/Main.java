@@ -143,9 +143,9 @@ public class Main {
 		
 		//Add the rest of the nodes
 		ArrayList<Integer> completePath;
-		//completePath = tsp.addRemainingNodes(nodes, convexHull);
+		completePath = tsp.addRemainingNodes(nodes, convexHull);
 		if(drawSolution) {
-			//g.updateContent(completePath);
+			g.updateContent(completePath);
 		}
 		createTimeStamp("adding remaining nodes to path");
 		
@@ -154,6 +154,8 @@ public class Main {
 		if(printSolution) {
 			//printPath(improvedPath);
 		}
+		
+		
 		
 		if(drawSolution) {
 			g.showG();

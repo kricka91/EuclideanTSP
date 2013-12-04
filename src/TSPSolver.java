@@ -361,5 +361,203 @@ public class TSPSolver {
 		return len;
 	}
 	
+	public ArrayList<Integer> s3opt(ArrayList<Integer> path, final Node[] nodes) {
+		int n = nodes.length;
+		//ArrayList<Integer> lpath = (ArrayList<Integer>) path.clone();
+		int[] inIndex = new int[n];
+		for(int i = 0; i < n; i++) {
+			inIndex[path.get(i)] = i;
+		}
+		//System.err.println(path);
+		///for(int i = 0; i < inIndex.length; i++) {
+			//System.err.print(inIndex[i] + " ");
+		//}
+		//System.err.println();
+		
+		
+		for(int i = 0; i < n; i++) {
+			int s = nodes[i].closest.length;
+			
+			int n1 = i;
+			int n1p = (inIndex[n1] == 0 ? path.get(n-1) : path.get(inIndex[n1]-1));
+			int n1n = (inIndex[n1] == n-1 ? path.get(0) : path.get(inIndex[n1]+1));
+			boolean swapped = false;
+			for(int j = 0; j < s; j++) {
+				int n2 = nodes[i].closest[j];
+				int n2p = (inIndex[n2] == 0 ? path.get(n-1) : path.get(inIndex[n2]-1));
+				int n2n = (inIndex[n2] == n-1 ? path.get(0) : path.get(inIndex[n2]+1));
+				
+				for(int k = j+1; k < s; k++) {
+					int n3 = nodes[i].closest[k];
+					int n3p = (inIndex[n3] == 0 ? path.get(n-1) : path.get(inIndex[n3]-1));
+					int n3n = (inIndex[n3] == n-1 ? path.get(0) : path.get(inIndex[n3]+1));
+					
+					/*
+					System.err.println("Full path is: " + path);
+					System.err.println(n1p + " " + n1 + " " + n1n);
+					System.err.println(n2p + " " + n2 + " " + n2n);
+					System.err.println(n3p + " " + n3 + " " + n3n);
+					System.err.println();
+					*/
+					
+					int swap = triSwapOrNo(path,inIndex,nodes,new int[] {n1p,n1,n1n,n2p,n2,n2n,n3p,n3,n3n}); 
+					//0 == dont swap, 1 == swap forward, 2 == swap backward
+					
+					if(swap != 0) {
+						System.err.println("ARG "+ n1 + " " + n2 + " " + n3);
+						//System.err.println("INdex "+ inIndex[n1] + " " + inIndex[n2] + " " + inIndex[n3]);
+						System.err.println("LENGTH BEFORE: " + getPathLength(path,nodes));
+						swapped = true;
+					}
+						
+					
+					if(swap == 1) {
+						tripleSwap(path,inIndex[n1],inIndex[n2],inIndex[n3]);
+						int tmp1 = inIndex[n1];
+						inIndex[n1] = inIndex[n2];
+						inIndex[n2] = inIndex[n3];
+						inIndex[n3] = tmp1;
+					} else if(swap == 2) {
+						tripleSwap(path,inIndex[n3],inIndex[n2],inIndex[n1]);
+						int tmp1 = inIndex[n1];
+						inIndex[n1] = inIndex[n3];
+						inIndex[n3] = inIndex[n2];
+						inIndex[n2] = tmp1;
+					}
+					if(swap != 0) {
+						//System.err.println("ARG "+ n1 + " " + n2 + " " + n3);
+						System.err.println("LENGTH AFTER: " + getPathLength(path,nodes));
+						//System.err.println(path);
+						//for(int a = 0; a < inIndex.length; a++) {
+						//	System.err.print(inIndex[a] + " ");
+						//}
+						//System.err.println();
+					}
+					
+					//if(!legalPath(path,nodes))
+					//	System.out.println("NOT LEGAL PATH WTF ARE U DOING"); //TODO remove this
+					if(swapped)
+						break;
+					
+					//if(swapped)
+						//System.err.println("SWAPPED " + n1 + " " + n2 + " " + n3);
+				}
+				if(swapped)
+					break;
+			} 
+			if(swapped) 
+				i=0;
+			
+		}
+		
+		return path;
+	}
 	
+	private int findPrev(ArrayList<Integer> path, int n) {
+		if(path.get(0) == n) {
+			return path.size()-1;
+		}
+		
+		
+		for(int i = 1; i < path.size(); i++) {
+			if(path.get(i) == n) {
+				return path.get(i-1);
+			}
+		}
+		
+		return -1;
+	}
+	
+	public int triSwapOrNo(ArrayList<Integer> path, final int[] inIndex,final Node[] nodes, int[] rel) {
+		int n1p = rel[0]; int n1 = rel[1]; int n1n = rel[2];
+		int n2p = rel[3]; int n2 = rel[4]; int n2n = rel[5];
+		int n3p = rel[6]; int n3 = rel[7]; int n3n = rel[8];
+		
+		
+		int prevDist = nodes[n1p].distances[n1] + nodes[n1].distances[n1n]
+			       + nodes[n2p].distances[n2] + nodes[n2].distances[n2n]
+			       + nodes[n3p].distances[n3] + nodes[n3].distances[n3n];
+	
+		int newFDist = nodes[n1p].distances[n3] + nodes[n3].distances[n1n]
+		       + nodes[n2p].distances[n1] + nodes[n1].distances[n2n]
+		       + nodes[n3p].distances[n2] + nodes[n2].distances[n3n];
+	
+		int newBDist = nodes[n1p].distances[n2] + nodes[n2].distances[n1n]
+		       + nodes[n2p].distances[n3] + nodes[n3].distances[n2n]
+		       + nodes[n3p].distances[n1] + nodes[n1].distances[n3n];
+		
+		if(n1n == n2) {
+			prevDist -= nodes[n1].distances[n2];
+			newFDist -= nodes[n3].distances[n1];
+			newBDist -= nodes[n2].distances[n3];
+			return 0;
+		} else if(n1p == n2) {
+			prevDist -= nodes[n2].distances[n1];
+			newFDist -= nodes[n3].distances[n2];
+			newBDist -= nodes[n1].distances[n3];
+			return 0;
+		}
+		
+		if(n1n == n3) {
+			prevDist -= nodes[n1].distances[n3];
+			newFDist -= nodes[n2].distances[n1];
+			newBDist -= nodes[n3].distances[n2];
+			return 0;
+		} else if(n1p == n3) {
+			prevDist -= nodes[n3].distances[n1];
+			newFDist -= nodes[n2].distances[n3];
+			newBDist -= nodes[n1].distances[n2];
+			return 0;
+		}
+		
+		if(n2n == n3) {
+			prevDist -= nodes[n2].distances[n3];
+			newFDist -= nodes[n1].distances[n2];
+			newBDist -= nodes[n3].distances[n1];
+			return 0;
+		} else if(n2p == n3) {
+			prevDist -= nodes[n3].distances[n2];
+			newFDist -= nodes[n1].distances[n3];
+			newBDist -= nodes[n2].distances[n1];
+			return 0;
+		}
+		
+	
+		int swap = 0;
+		if(newFDist < prevDist) {
+			//forward swap improves!
+			swap = 1;
+			prevDist = newFDist;
+		}
+	
+		if(newBDist < prevDist) {
+			swap = 2;
+		}
+		return swap;
+	}
+	
+
+	private void tripleSwap(ArrayList<Integer> path, int n1, int n2, int n3) {
+		//int tmp2 = path.get(n2);
+		int tmp2 = path.get(n2);
+		path.set(n2, path.get(n1));
+		path.set(n1, path.get(n3));
+		path.set(n3, tmp2);
+	}
+	
+	//for debugging purposes only
+	private boolean legalPath(ArrayList<Integer> path, Node[] nodes) {
+		if(nodes.length != path.size())
+			return false;
+		
+		int n = nodes.length;
+		boolean[] b = new boolean[n];
+		
+		for(int i = 0; i < n; i++) {
+			if(b[path.get(i)])
+				return false;
+			b[path.get(i)] = true;
+		}
+		return true;
+	}
 }

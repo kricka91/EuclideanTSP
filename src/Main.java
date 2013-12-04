@@ -107,7 +107,6 @@ public class Main {
 	    //}
 		
 		TSPSolver tsp = new TSPSolver();
-		
 		ArrayList<Integer> path;
 
 		Graphical g = new Graphical(nodes);
@@ -121,16 +120,26 @@ public class Main {
 
 
 		//get intial path
-		//path = tsp.getInitialPath(nodes);
-		//createTimeStamp("initial path");
+		path = tsp.getInitialPath(nodes);
+		createTimeStamp("initial path");
+
+		//improve path
+		path = tsp.improvePath(path, nodes);
+		//improvedPath = tsp.solve(nodes);
+		//createTimeStamp("local search opt");
+		createTimeStamp("2 opt");
+		
+		path = tsp.s3opt(path, nodes);
+		createTimeStamp("3 opt");
+		System.err.println("Finished local search opt");
 
 		//improve path
 		//path = tsp.improvePath(path, nodes);
-		path = tsp.solve(nodes);
+		//path = tsp.solve(nodes);
 		if(drawSolution) {
 			g.updateContent(path);
 		}
-		createTimeStamp("solve with local search opt");
+		//createTimeStamp("solve with local search opt");
 		
 		//Compute convex hull
 		ArrayList<Integer> convexHull;

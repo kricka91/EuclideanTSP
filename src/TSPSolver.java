@@ -649,4 +649,97 @@ public class TSPSolver {
 		}
 		return true;
 	}
+	
+	/*
+	 * 2 OPT with worsening - the tornment algorithm
+	 */
+	public ArrayList<Integer> tornmentAlg(ArrayList<Integer> path, final Node[] nodes) {
+		//improvePath(path,nodes);
+		ArrayList<Integer> bestPath = (ArrayList<Integer>) path.clone();
+		long bestPathLen = getPathLength(bestPath,nodes);
+		final int numIters = 10;
+		final int thresh = 1000;
+		int n = nodes.length;
+		
+		long curPathLen = bestPathLen;
+		for(int iter = 0; iter < numIters; iter++) {
+			
+			for(int i = iter%n; i < n; i++) {
+				for(int j = i+2; j < n; j++) {
+					boolean swapped = false;
+					if(!(i == 0 && j == n-1)) {
+						//these below stand for i-start, i-end, j-start, j-end.
+						//We are trying to swap from the paths is-ie and js-je to is-js and ie-je
+						int is = i;
+						int ie = (i == n-1 ? 0 : i+1);  
+						int js = j;
+						int je = (j == n-1 ? 0 : j+1); 
+						
+						//see if swap is better
+						int prevDist = nodes[path.get(is)].distances[path.get(ie)] +
+								       nodes[path.get(js)].distances[path.get(je)];
+						int newDist = nodes[path.get(is)].distances[path.get(js)] +
+							          nodes[path.get(ie)].distances[path.get(je)];
+						if(newDist - thresh < prevDist) {
+							
+							//number of nodes from ie to js
+							int iToj = js-ie+1;
+							int jToi = 0;
+							if(je == 0) {
+								jToi = is+1;
+							} else {
+								jToi = n-je + is+1;
+							}
+							swapped = true;
+							if(iToj <= jToi) {
+								int mid = iToj/2;
+								for(int k = 0; k < mid; k++) {
+									swap(path,ie+k,js-k);
+								}
+							} else {
+								int mid = jToi/2;
+								int jc = je;
+								int ic = is;
+								for(int k = 0; k < mid; k++) {
+									swap(path,ic,jc);
+									ic--;
+									jc++;
+									if(jc == n)
+										jc = 0;
+									if(ic == -1)
+										ic = n-1;
+								}
+							}
+							curPathLen = curPathLen - prevDist + newDist;
+							
+							
+							if(curPathLen < bestPathLen) {
+								bestPathLen = curPathLen;
+								bestPath = (ArrayList<Integer>) path.clone();
+							}
+							
+						} 
+					}
+					
+
+					if(swapped) {
+						//improv = true;
+						//i--;
+						
+						
+						break;
+					}
+					
+					
+				}
+			}
+			
+			
+			
+			
+			
+		}
+		improvePath(bestPath,nodes);
+		return bestPath;
+	}
 }

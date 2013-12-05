@@ -145,9 +145,9 @@ public class Main {
 		addPartRes("2 opt", path);
 		createTimeStamp("2 opt");
 		
-		path = tsp.s3opt(path, nodes);
-		addPartRes("3 opt", path);
-		createTimeStamp("3 opt");
+		//path = tsp.s3opt(path, nodes);
+		//addPartRes("3 opt", path);
+		//createTimeStamp("3 opt");
 		
 		/*
 		 * MST ALGORITHM HERE
@@ -159,6 +159,15 @@ public class Main {
 		addPartRes("MST 2-opt",mstPath);
 		createTimeStamp("MST tree 2-opt");
 */
+		
+		ArrayList<Integer> torPath = tsp.nearestNeighbor(nodes, 0);
+		torPath = tsp.tornmentAlg(torPath, nodes);
+		addPartRes("TOR PATH",torPath);
+		createTimeStamp("TOR path");
+		System.err.println("TOR path length " + tsp.getPathLength(torPath,nodes));
+		
+		
+		
 		//improve path
 		//path = tsp.improvePath(path, nodes);
 		//path = tsp.solve(nodes);
@@ -184,7 +193,7 @@ public class Main {
 			//printPath(improvedPath);
 		}
 		
-		System.err.println("length of 3opt path: " + tsp.getPathLength(path, nodes));
+		System.err.println("length of 2opt path: " + tsp.getPathLength(path, nodes));
 		System.err.println("length of convex path: " + tsp.getPathLength(completePath, nodes));
 		
 		tsp.improvePath(completePath, nodes);

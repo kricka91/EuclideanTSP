@@ -122,7 +122,7 @@ public class Main {
 	    //}
 		
 		TSPSolver tsp = new TSPSolver();
-		ArrayList<Integer> path;
+		Path path;
 
 
 		// calculate all distances.
@@ -130,21 +130,32 @@ public class Main {
 		for(int i = 0; i < n; i++) {
 			nodes[i].calcClosest(10);
 		}
-		/*createTimeStamp("distance computation");
+		createTimeStamp("distance computation");
 
 
 		//get intial path
 		path = tsp.getInitialPath(nodes);
-		addPartRes("initial path", path);
-		createTimeStamp("initial path");
+		//path = tsp.solve(nodes);
+		//addPartRes("initial path", path);
+		//createTimeStamp("initial path");
 
+		
+		
 		//improve path
-		path = tsp.improvePath(path, nodes);
+		
+		tsp.f2Opt(path, nodes);
 		//improvedPath = tsp.solve(nodes);
 		//createTimeStamp("local search opt");
 		addPartRes("2 opt", path);
 		createTimeStamp("2 opt");
-		*/
+		System.err.println("2opt length: " + tsp.getPathLength(path, nodes));
+		
+		
+		tsp.full1Opt(path, nodes);
+		addPartRes("1 opt", path);
+		createTimeStamp("1 opt");
+		System.err.println("1opt length: " + tsp.getPathLength(path, nodes));
+		
 		//path = tsp.s3opt(path, nodes);
 		//addPartRes("3 opt", path);
 		//createTimeStamp("3 opt");
@@ -161,10 +172,10 @@ public class Main {
 */
 		
 		//Path torPath = new ArrayList<Integer>(); //tsp.nearestNeighbor(nodes, 0);
-		Path torPath = tsp.solve(nodes);
+		//Path torPath = tsp.solve(nodes);
 				//tsp.tornmentAlg(torPath, nodes);
-		addPartRes("TOR PATH",torPath);
-		createTimeStamp("TOR path");
+		//addPartRes("TOR PATH",torPath);
+		//createTimeStamp("TOR path");
 		//System.err.println("TOR path length " + tsp.getPathLength(torPath,nodes));
 		
 		
@@ -191,7 +202,7 @@ public class Main {
 		
 		//print path
 		if(printSolution) {
-			printPath(torPath);
+			printPath(path);
 		}
 		
 		//System.err.println("length of 2opt path: " + tsp.getPathLength(path, nodes));

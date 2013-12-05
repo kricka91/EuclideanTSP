@@ -18,7 +18,7 @@ public class TSPSolver {
 	
 	public Path solve(Node[] allNodes) {
 		int n = allNodes.length;
-		int iters = 3;
+		int iters = 1;
 		Path bestPath = null;
 		int[] starts = new int[iters];
 		int hop = n/iters;
@@ -41,7 +41,8 @@ public class TSPSolver {
 			}*/
 			
 			
-			path = tornmentAlg(path,allNodes);
+			f2Opt(path,allNodes);
+			full1Opt(path,allNodes);
 			long len = getPathLength(path,allNodes);
 			if(len < bestPathLength) {
 				bestPathLength = len;
@@ -729,17 +730,77 @@ public class TSPSolver {
 						
 						break;
 					}
-					
-					
 				}
 			}
-			
-			
-			
-			
-			
 		}
 		f2Opt(bestPath,nodes);
 		return bestPath;
 	}
+	
+	
+	public void full1Opt(Path path, final Node[] nodes) {
+		int n = nodes.length;
+		//int numSwaps = 0;
+		int numIters = 10;
+		
+		
+		for(int iter = 0; iter < numIters; iter++) {
+			improv = false;
+			for(int i = 0; i < n; i++) {
+				int s = nodes[i].closest.length;
+				int pi = path.getPrevNode(i);
+				int ni = path.getNextNode(i);
+				boolean swapped = false;
+				
+				for(int j = 0; j < s; j++) {
+					int jn, js, je;
+					jn = nodes[i].closest[j];
+					if(path.inIndex(jn) < path.inIndex(i)) {
+						je = jn;
+						js = path.getPrevNode(je);
+						if(je == i || js == i)
+							continue;
+					} else { //j > i
+						js = jn;
+						je = path.getNextNode(js);
+						if(js == i || je == i)
+							continue;
+					}
+					//System.err.println(path);
+					//System.err.println("i: " + i + ", js: " + js + ", je: " + je);
+					//System.err.println();
+					
+					
+					int prevDist = nodes[js].distances[je] + nodes[pi].distances[i] + nodes[i].distances[ni];
+					int newDist = nodes[js].distances[i] + nodes[i].distances[je] + nodes[pi].distances[ni];
+					
+					if(newDist < prevDist) {
+						//swap improves
+						//System.err.println("Moving node " + i + " into between " + js + " " + je);
+						//System.err.println(path);
+						path.move(i, js);
+						//System.err.println(path);
+						
+						swapped = true;
+						improv = true;
+						//numSwaps++;
+						break;
+					}
+					
+				}
+				if(swapped) {
+					i--;
+				}
+				
+			}
+			if(!improv) {
+				//System.err.println("did " + iter + " iters");
+				break;
+			}
+		}
+
+		//System.err.println("1pot num swaps: " + numSwaps);
+	}
+	
+	
 }

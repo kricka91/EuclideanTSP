@@ -7,7 +7,7 @@ public class Main {
 	private static long startTime, endTime, partialTime;
 	private static ArrayList<String> partialTimeNames;
 	private static ArrayList<Long> partialTimes;
-	private static ArrayList<ArrayList<Integer>> partRes;
+	private static ArrayList<Path> partRes;
 	private static ArrayList<String> partResNames;
 
 	/**
@@ -42,10 +42,10 @@ public class Main {
 		}
 	}
 	
-	private static void addPartRes(String phaseName, ArrayList<Integer> path) {
+	private static void addPartRes(String phaseName, Path path) {
 		if (drawSolution) {
-			ArrayList<Integer> pathClone = new ArrayList<Integer>();
-			pathClone.addAll(path);
+			Path pathClone = (Path) path.clone();
+			//pathClone.addAll(path);
 			partRes.add(pathClone);
 			partResNames.add(phaseName);
 		}
@@ -92,10 +92,10 @@ public class Main {
 		}
 		
 		Node[] nodes = null;
-		partRes = new ArrayList<ArrayList<Integer>>();
-		partRes.add(new ArrayList<Integer>());	//Add empty path
+		partRes = new ArrayList<Path>();
+		//partRes.add(new ArrayList<Integer>());	//Add empty path
 		partResNames = new ArrayList<String>();
-		partResNames.add("Start");
+		//partResNames.add("Start");
 		
 		if(args.length == 0) {
 			//read from System.in
@@ -130,7 +130,7 @@ public class Main {
 		for(int i = 0; i < n; i++) {
 			nodes[i].calcClosest(10);
 		}
-		createTimeStamp("distance computation");
+		/*createTimeStamp("distance computation");
 
 
 		//get intial path
@@ -144,7 +144,7 @@ public class Main {
 		//createTimeStamp("local search opt");
 		addPartRes("2 opt", path);
 		createTimeStamp("2 opt");
-		
+		*/
 		//path = tsp.s3opt(path, nodes);
 		//addPartRes("3 opt", path);
 		//createTimeStamp("3 opt");
@@ -160,11 +160,12 @@ public class Main {
 		createTimeStamp("MST tree 2-opt");
 */
 		
-		ArrayList<Integer> torPath = tsp.nearestNeighbor(nodes, 0);
-		torPath = tsp.tornmentAlg(torPath, nodes);
+		//Path torPath = new ArrayList<Integer>(); //tsp.nearestNeighbor(nodes, 0);
+		Path torPath = tsp.solve(nodes);
+				//tsp.tornmentAlg(torPath, nodes);
 		addPartRes("TOR PATH",torPath);
 		createTimeStamp("TOR path");
-		System.err.println("TOR path length " + tsp.getPathLength(torPath,nodes));
+		//System.err.println("TOR path length " + tsp.getPathLength(torPath,nodes));
 		
 		
 		
@@ -172,7 +173,7 @@ public class Main {
 		//path = tsp.improvePath(path, nodes);
 		//path = tsp.solve(nodes);
 		//createTimeStamp("solve with local search opt");
-		
+		/*
 		//Compute convex hull
 		ArrayList<Integer> convexHull;
 		Node[] nodesCopy = (Node[])(nodes.clone());
@@ -185,22 +186,22 @@ public class Main {
 		completePath = tsp.addRemainingNodes(nodes, convexHull);
 		addPartRes("adding remaining nodes to path", completePath);
 		createTimeStamp("adding remaining nodes to path");
-		
+		*/
 		
 		
 		//print path
 		if(printSolution) {
-			//printPath(improvedPath);
+			printPath(torPath);
 		}
 		
-		System.err.println("length of 2opt path: " + tsp.getPathLength(path, nodes));
-		System.err.println("length of convex path: " + tsp.getPathLength(completePath, nodes));
+		//System.err.println("length of 2opt path: " + tsp.getPathLength(path, nodes));
+		//System.err.println("length of convex path: " + tsp.getPathLength(completePath, nodes));
 		
-		tsp.improvePath(completePath, nodes);
+		//tsp.improvePath(completePath, nodes);
 		
-		System.err.println("length of 2opted convex path: " + tsp.getPathLength(completePath, nodes));
-		tsp.s3opt(completePath, nodes);
-		System.err.println("length of 3opted convex path: " + tsp.getPathLength(completePath, nodes));
+		//System.err.println("length of 2opted convex path: " + tsp.getPathLength(completePath, nodes));
+		//tsp.s3opt(completePath, nodes);
+		//System.err.println("length of 3opted convex path: " + tsp.getPathLength(completePath, nodes));
 		
 		
 		
@@ -224,7 +225,7 @@ public class Main {
 	/**
 	 * Print the path
 	 */
-	public static void printPath(ArrayList<Integer> path) {
+	public static void printPath(Path path) {
 		for(int i = 0; i < path.size(); i++) {
 			System.out.println(path.get(i));
 		}

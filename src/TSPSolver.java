@@ -16,10 +16,10 @@ public class TSPSolver {
 		
 	}
 	
-	public ArrayList<Integer> solve(Node[] allNodes) {
+	public Path solve(Node[] allNodes) {
 		int n = allNodes.length;
 		int iters = 3;
-		ArrayList<Integer> bestPath = new ArrayList<Integer>();
+		Path bestPath = null;
 		int[] starts = new int[iters];
 		int hop = n/iters;
 		int current = 0;
@@ -30,8 +30,18 @@ public class TSPSolver {
 		
 		long bestPathLength = Long.MAX_VALUE;
 		for(int i = 0; i < iters; i++) {
-			ArrayList<Integer> path = nearestNeighbor(allNodes,starts[i]);
-			improvePath(path,allNodes);
+			Path path = nearestNeighbor(allNodes,starts[i]);
+			/*ArrayList<Integer> path = new ArrayList<Integer>();
+			int t = starts[i];
+			for(int j = 0; j < n; j++) {
+				path.add(t);
+				t++;
+				if(t == n)
+					t = 0;
+			}*/
+			
+			
+			path = tornmentAlg(path,allNodes);
 			long len = getPathLength(path,allNodes);
 			if(len < bestPathLength) {
 				bestPathLength = len;
@@ -183,7 +193,7 @@ public class TSPSolver {
 	}
 
 	
-	public ArrayList<Integer> getInitialPath(final Node[] allNodes) {
+	public Path getInitialPath(final Node[] allNodes) {
 		//TODO - now just returns a path 0,1,2,3,4...
 		/*ArrayList<Integer> path = new ArrayList<Integer>();
 		for(int i = 0; i < allNodes.length; i++) {
@@ -193,16 +203,18 @@ public class TSPSolver {
 	}
 	
 	
-	public ArrayList<Integer> nearestNeighbor(final Node[] allNodes, int startNode) {
+	public Path nearestNeighbor(final Node[] allNodes, int startNode) {
 		//start node is 0
 		//assumes calcClosest have been called on all
 		int n = allNodes.length;
 		
-		ArrayList<Integer> path = new ArrayList<Integer>();
+		ArrayList<Integer> pathA = new ArrayList<Integer>();
 		boolean[] used = new boolean[n];
+		int[] inIndex = new int[n];
 		
 		//int startNode = 0;
-		path.add(startNode);
+		pathA.add(startNode);
+		inIndex[startNode] = 0;
 		int last = startNode;
 		used[startNode] = true;
 		
@@ -212,11 +224,12 @@ public class TSPSolver {
 			if(closest == -1) {
 				closest = findClosest(allNodes[last], used);
 			}
-			path.add(closest);
+			inIndex[closest] = i;
+			pathA.add(closest);
 			used[closest] = true;
 			last = closest;
 		}
-		return path;
+		return new Path(pathA,inIndex);
 	}
 	
 	private int findClosest(Node node, boolean[] used) {
@@ -342,20 +355,17 @@ public class TSPSolver {
 	 * @param allNodes
 	 * @return
 	 */
-	public ArrayList<Integer> improvePath(ArrayList<Integer> path, final Node[] allNodes) {
+	public void f2Opt(Path path, final Node[] allNodes) {
 		//return path; //TODO
 		//int i = 0;
 		for(int i = 0; i< 10;i++) {
-			full2Opt(path,allNodes);
+			part2Opt(path,allNodes);
 			if(!improv)
-				break;
+				return;
 		}
-		
-		
-		return path;
 	}
 	
-	public ArrayList<Integer> full2Opt(ArrayList<Integer> path, final Node[] nodes) {
+	public void part2Opt(Path path, final Node[] nodes) {
 		int n = nodes.length;
 		improv = false;
 		//@SuppressWarnings("unchecked")
@@ -430,17 +440,15 @@ public class TSPSolver {
 				
 			}
 		}
-		
-		return path;
 	}
 	
-	private void swap(ArrayList<Integer> path, int i, int j) {
+	private void swap(Path path, int i, int j) {
 		int tmp = path.get(i);
 		path.set(i,path.get(j));
 		path.set(j, tmp);
 	}
 	
-	public long getPathLength(ArrayList<Integer> path, final Node[] nodes) {
+	public long getPathLength(Path path, final Node[] nodes) {
 		long len = 0;
 		int n = path.size();
 		for(int i = 1; i < n; i++) {
@@ -450,6 +458,9 @@ public class TSPSolver {
 		return len;
 	}
 	
+	/*
+	 * DONT USE
+	 */
 	public ArrayList<Integer> s3opt(ArrayList<Integer> path, final Node[] nodes) {
 		int n = nodes.length;
 		//ArrayList<Integer> lpath = (ArrayList<Integer>) path.clone();
@@ -542,22 +553,10 @@ public class TSPSolver {
 		return path;
 	}
 	
-	private int findPrev(ArrayList<Integer> path, int n) {
-		if(path.get(0) == n) {
-			return path.size()-1;
-		}
-		
-		
-		for(int i = 1; i < path.size(); i++) {
-			if(path.get(i) == n) {
-				return path.get(i-1);
-			}
-		}
-		
-		return -1;
-	}
-	
-	public int triSwapOrNo(ArrayList<Integer> path, final int[] inIndex,final Node[] nodes, int[] rel) {
+	/*
+	 * PART OF DEPRECATED 3OPT, DO NOT USE
+	 */
+	private int triSwapOrNo(ArrayList<Integer> path, final int[] inIndex,final Node[] nodes, int[] rel) {
 		int n1p = rel[0]; int n1 = rel[1]; int n1n = rel[2];
 		int n2p = rel[3]; int n2 = rel[4]; int n2n = rel[5];
 		int n3p = rel[6]; int n3 = rel[7]; int n3n = rel[8];
@@ -652,10 +651,11 @@ public class TSPSolver {
 	
 	/*
 	 * 2 OPT with worsening - the tornment algorithm
+	 * DO NOT USE FOR NOW
 	 */
-	public ArrayList<Integer> tornmentAlg(ArrayList<Integer> path, final Node[] nodes) {
+	public Path tornmentAlg(Path path, final Node[] nodes) {
 		//improvePath(path,nodes);
-		ArrayList<Integer> bestPath = (ArrayList<Integer>) path.clone();
+		Path bestPath = (Path) path.clone();
 		long bestPathLen = getPathLength(bestPath,nodes);
 		final int numIters = 10;
 		final int thresh = 1000;
@@ -715,7 +715,7 @@ public class TSPSolver {
 							
 							if(curPathLen < bestPathLen) {
 								bestPathLen = curPathLen;
-								bestPath = (ArrayList<Integer>) path.clone();
+								bestPath = (Path) path.clone();
 							}
 							
 						} 
@@ -739,7 +739,7 @@ public class TSPSolver {
 			
 			
 		}
-		improvePath(bestPath,nodes);
+		f2Opt(bestPath,nodes);
 		return bestPath;
 	}
 }

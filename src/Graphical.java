@@ -4,13 +4,13 @@ import java.awt.event.*;
 import javax.swing.*;
 
 public class Graphical extends JFrame {
-	ArrayList<ArrayList<Integer>> steps;
+	ArrayList<Path> steps;
 	ArrayList<String> stepNames;
 	int sizea = 600;
 	int curStep;
 	Node[] nodes;
 	Node[] scaledNodes;
-	ArrayList<Integer> path;
+	Path path;
 	String curStepName;
 	int maxCoord;
 	JButton nextStep, animate;
@@ -67,7 +67,7 @@ public class Graphical extends JFrame {
 		}
 	}
 
-	public void updateContent(ArrayList<ArrayList<Integer>> paths, ArrayList<String> names) {
+	public void updateContent(ArrayList<Path> paths, ArrayList<String> names) {
 		this.steps = paths;
 		this.path = steps.get(steps.size()-1);
 		this.stepNames = names;

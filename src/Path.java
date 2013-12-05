@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class Path {
@@ -46,6 +47,25 @@ public class Path {
 	 */
 	public int inIndex(int nodeIndex) {
 		return inIndex[nodeIndex];
+	}
+	
+	/*
+	 * Get n
+	 */
+	public int size() {
+		return n;
+	}
+	
+	@Override
+	public Object clone() {
+		return new Path((ArrayList<Integer>) p.clone(), Arrays.copyOf(inIndex,n));
+	}
+	
+	public boolean isEmpty() {
+		if(n == 0)
+			return true;
+		else
+			return false;
 	}
 	
 	

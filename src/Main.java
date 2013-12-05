@@ -148,7 +148,17 @@ public class Main {
 		path = tsp.s3opt(path, nodes);
 		addPartRes("3 opt", path);
 		createTimeStamp("3 opt");
-
+		
+		/*
+		 * MST ALGORITHM HERE
+		ArrayList<Integer> mstPath = tsp.mstAlg(nodes);
+		addPartRes("MST",mstPath);
+		createTimeStamp("MST tree");
+		
+		tsp.improvePath(mstPath, nodes);
+		addPartRes("MST 2-opt",mstPath);
+		createTimeStamp("MST tree 2-opt");
+*/
 		//improve path
 		//path = tsp.improvePath(path, nodes);
 		//path = tsp.solve(nodes);
@@ -167,6 +177,8 @@ public class Main {
 		addPartRes("adding remaining nodes to path", completePath);
 		createTimeStamp("adding remaining nodes to path");
 		
+		
+		
 		//print path
 		if(printSolution) {
 			//printPath(improvedPath);
@@ -180,6 +192,11 @@ public class Main {
 		System.err.println("length of 2opted convex path: " + tsp.getPathLength(completePath, nodes));
 		tsp.s3opt(completePath, nodes);
 		System.err.println("length of 3opted convex path: " + tsp.getPathLength(completePath, nodes));
+		
+		
+		
+		
+		
 		
 		if(drawSolution) {
 			Graphical g = new Graphical(nodes);

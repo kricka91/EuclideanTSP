@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.lang.Math;
 
 /**
@@ -9,6 +10,7 @@ import java.lang.Math;
 public class TSPSolver {
 	
 	private boolean improv;
+	
 	
 	public TSPSolver() {
 		
@@ -239,6 +241,93 @@ public class TSPSolver {
 
 		}
 		return minIndex;
+	}
+	
+	/***********
+	 * This is the Minimum Spanning Tree algorithm
+	 */
+	
+	public ArrayList<Integer> mstAlg(final Node[] nodes) {
+		int n = nodes.length;
+		ArrayList<Integer>[] tree = mst(nodes);
+		ArrayList<Integer> path = new ArrayList<Integer>();
+		//path.add(0)
+		recDFS(tree,path,0);
+		return path;
+	}
+	
+	private void recDFS(ArrayList<Integer>[] tree, ArrayList<Integer> path, int node) {
+		path.add(node);
+		for(int i = 0; i < tree[node].size(); i++) {
+			recDFS(tree,path,tree[node].get(i));
+		}
+	}
+	
+	private ArrayList<Integer>[] mst(final Node[] nodes) {
+		int n = nodes.length;
+		ArrayList<Integer>[] tree = new ArrayList[n];
+		
+		
+		boolean[] visited = new boolean[n];
+		ArrayList<Integer> nodesInTree = new ArrayList<Integer>();
+		//start in node 0
+		nodesInTree.add(0);
+		visited[0] = true;
+		for(int i = 0; i < n; i++) {
+			tree[i] = new ArrayList<Integer>();
+		}
+		
+		for(int i = 1; i < n; i++) {
+			int nextNode = -1;
+			int treeNode = -1;
+			int minDist = Integer.MAX_VALUE;
+			
+			for(int j = 0; j < nodesInTree.size(); j++) {
+				int nodeI = nodesInTree.get(j);
+				int s = nodes[nodeI].closest.length;
+				//int localMinDist = Integer.MAX_VALUE;
+				//int localNextNode = -1;
+				//int localTreeNode = -1;
+				boolean checkedClose = false;
+				for(int k = 0; k < s; k++) {
+					int cn = nodes[nodeI].closest[k];
+					if(!visited[cn]) {
+						//System.err.println("CLOSE");
+						checkedClose = true;
+						if(nodes[nodeI].distances[cn] < minDist) {
+							minDist = nodes[nodeI].distances[cn];
+							nextNode = cn;
+							treeNode = nodeI;
+						}
+					}
+				}
+				
+				if(!checkedClose) {
+					//System.err.println("NO CLOSE");
+					//all in "close" have already been looked through
+					//check every node then
+					for(int k = 0; k < n; k++) {
+						if(!visited[k]) {
+							if(nodes[nodeI].distances[k] < minDist) {
+								nextNode = k;
+								minDist = nodes[nodeI].distances[k];
+								treeNode = nodeI;
+							}
+						}
+					}
+				}
+			}
+			
+			//treeNode is now a node from current tree
+			//nextNode is the node to connect the tree to
+			
+			visited[nextNode] = true;
+			nodesInTree.add(nextNode);
+			tree[treeNode].add(nextNode);
+			//tree[nextNode].add(treeNode); //TODO
+			
+		}
+        return tree;
 	}
 	
 	

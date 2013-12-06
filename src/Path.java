@@ -108,6 +108,66 @@ public class Path {
 		}
 	}
 	
+	/*
+	 * Flip all nodes between path indices from and to.
+	 * Example 1:
+	 * input: p={0,1,2,3,4},from=1,to=4, output= {0,4,3,2,1}
+	 * input: p={0,1,2,3,4},from=3,to=1, output= {4,3,2,1,0}
+	 */
+	public void flip(int from, int to) {
+		if(from == to)
+			return;
+		
+		if(from <= to) {
+			int mid = ((to-from)/2)+1;
+			for(int k = 0; k < mid; k++) {
+				swap(from+k,to-k);
+			}
+		} else {
+			int mid = ((to-from)/2)+1;
+			int jc = from;
+			int ic = to;
+			for(int k = 0; k < mid; k++) {
+				swap(ic,jc);
+				ic--;
+				jc++;
+				if(jc == n)
+					jc = 0;
+				if(ic == -1)
+					ic = n-1;
+			}
+		}
+	}
+	
+	private void swap(int i, int j) {
+		int tmp = p.get(i);
+		set(i,p.get(j));
+		set(j, tmp);
+	}
+	
+	/*
+	 * Some methods for distances between nodes along the path.
+	 * The metric of the distances is number of edges to traverse to get to the other node.
+	 * input are nodes!
+	 */
+	
+	//distance of moving forward from from to to.
+	public int pathDistForward(int from, int to) {
+		if(from == to)
+			return 0;
+		
+		if(inIndex[from] < inIndex[to]) {
+			return inIndex[to] - inIndex[from];
+		} else {
+			return n - (inIndex[from] - inIndex[to]);
+		}
+	}
+	
+	public int pathDistBackward(int from, int to) {
+		return pathDistForward(to,from);
+	}
+	
+	
 	public String toString() {
 		return p.toString();
 	}

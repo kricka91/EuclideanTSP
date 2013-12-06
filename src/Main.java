@@ -32,7 +32,7 @@ public class Main {
 	 * Call this to insert a measurement time stamp after a specific part
 	 * @param a name of the part
 	 */
-	private static void createTimeStamp(String name) {
+	public static void createTimeStamp(String name) {
 		if (measureTime) {
 			endTime = System.nanoTime();
 			partialTime = (endTime - startTime)/1000;
@@ -123,6 +123,7 @@ public class Main {
 		
 		TSPSolver tsp = new TSPSolver();
 		Path path;
+		Path solvepath;
 
 
 		// calculate all distances.
@@ -134,31 +135,63 @@ public class Main {
 
 
 		//get intial path
-		path = tsp.getInitialPath(nodes);
-		//path = tsp.solve(nodes);
+		//path = tsp.getInitialPath(nodes);
+		
+		
+		//path = tsp.getInitialPath(nodes);
+		//createTimeStamp("path");
+		//tsp.part2Opt(path,nodes);
+		
+		
+		//tsp.full1Opt(path, nodes);
+		//createTimeStamp("dummy2opt");
+		
+		
+		
+		//solvepath = tsp.solve(nodes);
 		//addPartRes("initial path", path);
-		//createTimeStamp("initial path");
+		//createTimeStamp("return");
 
 		
 		
 		//improve path
 		
+		path = tsp.getInitialPath(nodes);
+		//addPartRes("initialPath", path);
+		//createTimeStamp("init");
+		
 		tsp.f2Opt(path, nodes);
+		//addPartRes("2opt", path);
+		//createTimeStamp("f2opt");
 		//improvedPath = tsp.solve(nodes);
 		//createTimeStamp("local search opt");
-		addPartRes("2 opt", path);
-		createTimeStamp("2 opt");
+		//addPartRes("2 opt", path);
+		//createTimeStamp("2 opt");
 		System.err.println("2opt length: " + tsp.getPathLength(path, nodes));
 		
 		
 		tsp.full1Opt(path, nodes);
-		addPartRes("1 opt", path);
-		createTimeStamp("1 opt");
+		addPartRes("1opt", path);
+		createTimeStamp("f1opt");
+		
+		//addPartRes("1 opt", path);
+		//createTimeStamp("f1opt");
+		
+		
 		System.err.println("1opt length: " + tsp.getPathLength(path, nodes));
 		
+		
+		//Path p = tsp.getInitialPath(nodes);
+		//createTimeStamp("init");
+		//addPartRes("start", p);
+		
+		tsp.f3Opt(path, nodes, 50);
+	
 		//path = tsp.s3opt(path, nodes);
 		//addPartRes("3 opt", path);
-		//createTimeStamp("3 opt");
+		createTimeStamp("3 opt");
+		addPartRes("3-opt",path);
+		System.err.println("3opt length: " + tsp.getPathLength(path, nodes));
 		
 		/*
 		 * MST ALGORITHM HERE

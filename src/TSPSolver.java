@@ -17,20 +17,26 @@ public class TSPSolver {
 	}
 	
 	public Path solve(Node[] allNodes) {
+		
 		int n = allNodes.length;
-		int iters = 1;
+		int iters = 3;
 		Path bestPath = null;
 		int[] starts = new int[iters];
+		//Main.createTimeStamp("Initial variables");
 		int hop = n/iters;
+		//Main.createTimeStamp("division");
+		//int hop = 2;
 		int current = 0;
 		for(int i = 0; i < iters; i++) {
 			starts[i] = current;
 			current += hop;
 		}
-		
+		//Main.createTimeStamp("starts loop");
 		long bestPathLength = Long.MAX_VALUE;
 		for(int i = 0; i < iters; i++) {
 			Path path = nearestNeighbor(allNodes,starts[i]);
+			//Main.createTimeStamp("NN");
+			//Path path = nearestNeighbor(allNodes,0);
 			/*ArrayList<Integer> path = new ArrayList<Integer>();
 			int t = starts[i];
 			for(int j = 0; j < n; j++) {
@@ -42,12 +48,17 @@ public class TSPSolver {
 			
 			
 			f2Opt(path,allNodes);
+			//Main.createTimeStamp("f2opt");
 			full1Opt(path,allNodes);
+			//Main.createTimeStamp("f1opt");
+			//long len = 1000;
 			long len = getPathLength(path,allNodes);
+			//Main.createTimeStamp("path lengt callculation");
 			if(len < bestPathLength) {
 				bestPathLength = len;
 				bestPath = path;
 			}
+			//Main.createTimeStamp("setting best variables");
 		}
 		return bestPath;
 	}
@@ -816,5 +827,180 @@ public class TSPSolver {
 		//System.err.println("1pot num swaps: " + numSwaps);
 	}
 	
+	/***
+	 * ACTUAL AND HOPEFULLY USEFUL 3OPT
+	 * running time is in milliseconds
+	 */
+	public void f3Opt(Path path, final Node[] nodes, int runningTime) {
+		int n = nodes.length;
+		long prevPathLen = getPathLength(path,nodes);
+		
+		int improvs = 0;
+		for(int j = 0; j < 15; j++) {
+			for(int i = 0; i < n; i++) {
+				oneEdge3Opt(path,nodes,i);
+				//if(oneEdge3Opt(path,nodes,i))
+					//System.err.println("IMPROV");
+				
+				long pLen = getPathLength(path,nodes);
+				if(pLen >= prevPathLen) {
+					System.out.println("3opt made worse:");
+					System.out.println("old: " + prevPathLen);
+					System.out.println("new: " + pLen);
+				} else {
+					//System.out.println(3opt)
+					improvs++;
+				}
+			}
+		}
+		System.err.println("Improvements made: " + improvs);
+	}
+	
+	/*
+	 * The edge is the index of the start node of the edge - so if it is x it means the edge x to x+1
+	 * well, almost, as we have to check the indices and such etc.
+	 */
+	public boolean oneEdge3Opt(Path path, final Node[] nodes, int edge) {
+		//pick out the closest edges to edge
+		ArrayList<Integer> closestEdges = new ArrayList<Integer>();
+		int edgeS = edge;
+		int edgeE = path.getNextNode(edgeS);
+		
+		//ArrayList<Integer> allClosest = new ArrayList<Integer>();
+		int s = nodes[edge].closest.length;
+		for(int i = 0; i < s; i++) {
+			int node = nodes[edgeS].closest[i];
+			if(node != edgeE) {
+				addIfNotIn(closestEdges,node);
+				addIfNotIn(closestEdges,path.getPrevNode(node));
+			}
+			node = nodes[edgeE].closest[i];
+			if(node != edgeS) {
+				addIfNotIn(closestEdges,node);
+				addIfNotIn(closestEdges,path.getPrevNode(node));
+			}
+			
+		}
+		
+		int numEdges = closestEdges.size();
+		
+		for(int i = 0; i < numEdges; i++) {
+			for(int j = i+1; j < numEdges; j++) {
+				if(try3opt(path,nodes,edgeS,closestEdges.get(i),closestEdges.get(j))) {
+					return true;
+				}
+				
+			}
+		}
+		
+		return false;
+	}
+	
+	//returns true if changed anything
+	private boolean try3opt(Path path, final Node[] nodes, int edge1, int edge2, int edge3) {
+		int e1h1 = edge1;
+		int e1h2 = path.getNextNode(edge1);
+		int e2h1 = edge2;
+		int e2h2 = path.getNextNode(edge2);
+		int e3h1 = edge3;
+		int e3h2 = path.getNextNode(edge3);
+		
+		int c1s,c1e,c2s,c2e,c3s,c3e;
+		
+		c1e = e1h1;
+		c2s = e1h2;
+		
+		int dtmp2 = path.pathDistForward(e2h2, c1e);
+		int dtmp3 = path.pathDistForward(e3h2, c1e);
+		
+		if(dtmp2 < dtmp3) {
+			c1s = e2h2;
+			c3e = e2h1;
+			c2e = e3h1;
+			c3s = e3h2;
+		} else {
+			c1s = e3h2;
+			c3e = e3h1;
+			c2e = e2h1;
+			c3s = e2h2;
+		}
+		//now that we have sorted out the three remaining components, there are 8 possible ways to put
+		//them together to one resulting path:
+		//c1e-c2s, c2e-c3s, c3e-c1s (current)
+		//c1e-c2s, c2e-c3e, c3s-c1s (2-opt between edges 2 and 3)
+		//c1e-c2e, c2s-c3s, c3e-c1s (2-opt between edges 1 and 2 (or 3 depending on situation))
+		//c1e-c2e, c2s-c3e, c3s-c1s (3-opt)
+		//c1e-c3s, c3e-c2s, c2e-c1s (3-opt)
+		//c1e-c3s, c3e-c2e, c2s-c1s (3-opt)
+		//c1e-c3e, c3s-c2s, c2e-c1s (3-opt)
+		//c1e-c3e, c3s-c2e, c2s-c1s (2-opt between edges 1 and 3 (or 2 depending on situation))
+		
+		//these distances appear in order in the array here
+		int[] allDists = new int[8];
+		//TODO if in crisis can make this into less additions
+		allDists[0] = nodes[c1e].distances[c2s] + nodes[c2e].distances[c3s] + nodes[c3e].distances[c1s];
+		allDists[1] = nodes[c1e].distances[c2s] + nodes[c2e].distances[c3e] + nodes[c3s].distances[c1s];
+		allDists[2] = nodes[c1e].distances[c2e] + nodes[c2s].distances[c3s] + nodes[c3e].distances[c1s];
+		allDists[3] = nodes[c1e].distances[c2e] + nodes[c2s].distances[c3e] + nodes[c3s].distances[c1s];
+		allDists[4] = nodes[c1e].distances[c3s] + nodes[c3e].distances[c2s] + nodes[c2e].distances[c1s];
+		allDists[5] = nodes[c1e].distances[c3s] + nodes[c3e].distances[c2e] + nodes[c2s].distances[c1s];
+		allDists[6] = nodes[c1e].distances[c3e] + nodes[c3s].distances[c2s] + nodes[c2e].distances[c1s];
+		allDists[7] = nodes[c1e].distances[c3e] + nodes[c3s].distances[c2e] + nodes[c2s].distances[c1s];
+		
+		//find best configuration:
+		//TODO try worst configuration of those that improve?
+		int bestConfig = -1;
+		int bestPath = Integer.MAX_VALUE;
+		for(int i = 0; i < 8; i++) {
+			if(allDists[i] < bestPath) {
+				bestPath = allDists[i];
+				bestConfig = i;
+			}
+		}
+		if(bestConfig == 0) {
+			//no configuration improved
+			return false;
+		}
+		switch(bestConfig) {
+		case 0:
+			return false;
+		case 1: 
+			path.flip(path.inIndex(c3s),path.inIndex(c3e));
+			break;
+		case 2:
+			path.flip(path.inIndex(c2s),path.inIndex(c2e));
+			break;
+		case 3:
+			path.flip(path.inIndex(c2s),path.inIndex(c2e));
+			path.flip(path.inIndex(c3s),path.inIndex(c3e));
+			break;
+		case 4:
+			path.flip(path.inIndex(c1s),path.inIndex(c1e));
+			path.flip(path.inIndex(c2s),path.inIndex(c2e));
+			path.flip(path.inIndex(c3s),path.inIndex(c3e));
+			break;
+		case 5:
+			path.flip(path.inIndex(c1s),path.inIndex(c1e));
+			path.flip(path.inIndex(c3s),path.inIndex(c3e));
+			break;
+		case 6:
+			path.flip(path.inIndex(c1s),path.inIndex(c1e));
+			path.flip(path.inIndex(c2s),path.inIndex(c2e));
+			break;
+		case 7:
+			path.flip(path.inIndex(c1s),path.inIndex(c1e));
+			break;
+		}
+		return true;
+	}
+	
+	
+	private void addIfNotIn(ArrayList<Integer> al, int i) {
+		for(int j = 0; j < al.size(); j++) {
+			if(al.get(j) == i)
+				return;
+		}
+		al.add(i);
+	}
 	
 }

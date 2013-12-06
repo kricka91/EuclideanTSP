@@ -869,12 +869,12 @@ public class TSPSolver {
 		//ArrayList<Integer> allClosest = new ArrayList<Integer>();
 		int s = nodes[edge].closest.length;
 		for(int i = 0; i < s; i++) {
-			int node = nodes[edgeS].closest[i];
+			int node = nodes[edgeS].closest[i].key.intValue();
 			if(node != edgeE) {
 				addIfNotIn(closestEdges,node);
 				addIfNotIn(closestEdges,path.getPrevNode(node));
 			}
-			node = nodes[edgeE].closest[i];
+			node = nodes[edgeE].closest[i].key.intValue();
 			if(node != edgeS) {
 				addIfNotIn(closestEdges,node);
 				addIfNotIn(closestEdges,path.getPrevNode(node));

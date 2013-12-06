@@ -1,12 +1,15 @@
 import java.util.Comparator;
+import java.util.Arrays;
+import java.lang.Math;
 
 public class Node {
 
 	public final double x, y, angle;
 	public final int index, n;
+	public static final double INVSQRT2 = 1.0/Math.sqrt(2.0);
 	
 	int[] distances;
-	int[] closest;
+	Pair<Integer, Integer>[] closest;
 	
 	//Constructor
 	//n = number of nodes
@@ -29,6 +32,23 @@ public class Node {
 		return (int) Math.round(Math.sqrt(Math.pow(n.x-x, 2) + Math.pow(n.y-y, 2)));
 	}
 	
+	/**
+	 * Calculate euclidian distance between this node and the given node, rounded to the nearest integer.
+	 * @param n Other node
+	 * @return Euclidian distance
+	 */
+	public int calcApproxDistanceTo(Node n) {
+		return (int)(Math.abs(n.x-x)+Math.abs(n.y-y));
+		/*
+		double absxd = Math.abs(n.x-x);
+		double absyd = Math.abs(n.y-y);
+		double approx1 = Math.max(absxd, absyd);
+		double approx2 = INVSQRT2*(absxd+absyd);
+		double approx = Math.max(approx1, approx2);
+		return (int)Math.round(approx);
+		*/
+	}
+	
 	public String toString() {
 		//return "(" + x + " " + y + ")";
 		//return "Node: {index = " + index + ", position: {x = " + x + ", y = " + y + "} }";
@@ -40,12 +60,12 @@ public class Node {
 		    x = n-1;
 		}
 
-		closest = new int[x];
+		closest = (Pair<Integer, Integer>[])new Pair<?,?>[x];
 		int i;
 		int numPlaced = 0;
 		for(i = 0; numPlaced < x; i++) {
 			if(i != index) {
-				closest[numPlaced] = i;
+				closest[numPlaced] = new Pair(new Integer(i), new Integer(distances[i]));
 				numPlaced++;
 			}
 		}
@@ -56,17 +76,20 @@ public class Node {
 				int worstDist = Integer.MIN_VALUE;
 				int worstIndex = -1;
 				for(int j = 0; j < x; j++) {
-					if(distances[closest[j]] > worstDist) {
-						worstDist = distances[closest[j]];
+					if(distances[closest[j].key] > worstDist) {
+						worstDist = distances[closest[j].key];
 						worstIndex = j;
 					}
 				}
 				
 				if(distances[i] < worstDist) {
-					closest[worstIndex] = i;
+					closest[worstIndex] = new Pair(new Integer(i), new Integer(distances[i]));
 				}
 			}
 		}
+		
+		Arrays.sort(closest, new Pair().new ValueComparator());
+		
 	}
 	
 	

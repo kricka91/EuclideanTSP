@@ -203,6 +203,14 @@ public class TSPSolver {
 		return nearestNeighbor(allNodes,0);
 	}
 	
+	public Path greedyEdge(final Node[] allNodes) {
+		//TODO maybe
+		
+		
+		
+		
+		return null;
+	}
 	
 	public Path nearestNeighbor(final Node[] allNodes, int startNode) {
 		//start node is 0
@@ -235,21 +243,27 @@ public class TSPSolver {
 	
 	private int findClosest(Node node, boolean[] used) {
 		int n = node.n;
-		int[] possibilities = new int[n];
+		Pair<Integer, Integer>[] possibilities = (Pair<Integer, Integer>[])new Pair<?,?>[n];
+		possibilities[0] = new Pair(new Integer(0), null);
 		for(int i = 1; i < n; i++) {
-			possibilities[i] = i;
+			possibilities[i] = new Pair(new Integer(i), null);
 		}
 		return findClosest(possibilities, node, used);
 	}
 	
-	private int findClosest(int[] possibilities, Node node, boolean[] used) {
+	private int findClosest(Pair<Integer,Integer>[] possibilities, Node node, boolean[] used) {
 		int minDist = Integer.MAX_VALUE;
 		int minIndex = -1;
+		//System.err.println("possibilities is of length: " + possibilities.length);
 		for(int i = 0; i < possibilities.length; i++) {
-			if(!used[possibilities[i]]) {
-				if(node.distances[possibilities[i]] < minDist) {
-					minDist = node.distances[possibilities[i]];
-					minIndex = possibilities[i];
+			//System.err.println("i is: " + i);
+			Pair<Integer, Integer> tmpPair = possibilities[i];
+			Integer tmpi = tmpPair.key;
+			int tmpint = tmpi.intValue();
+			if(!used[tmpint]) {
+				if(node.distances[possibilities[i].key.intValue()] < minDist) {
+					minDist = node.distances[possibilities[i].key.intValue()];
+					minIndex = possibilities[i].key.intValue();
 				}
 			}
 
@@ -304,7 +318,7 @@ public class TSPSolver {
 				//int localTreeNode = -1;
 				boolean checkedClose = false;
 				for(int k = 0; k < s; k++) {
-					int cn = nodes[nodeI].closest[k];
+					int cn = nodes[nodeI].closest[k].key.intValue();
 					if(!visited[cn]) {
 						//System.err.println("CLOSE");
 						checkedClose = true;
@@ -484,12 +498,12 @@ public class TSPSolver {
 			int n1n = (inIndex[n1] == n-1 ? path.get(0) : path.get(inIndex[n1]+1));
 			boolean swapped = false;
 			for(int j = 0; j < s; j++) {
-				int n2 = nodes[i].closest[j];
+				int n2 = nodes[i].closest[j].key.intValue();
 				int n2p = (inIndex[n2] == 0 ? path.get(n-1) : path.get(inIndex[n2]-1));
 				int n2n = (inIndex[n2] == n-1 ? path.get(0) : path.get(inIndex[n2]+1));
 				
 				for(int k = j+1; k < s; k++) {
-					int n3 = nodes[i].closest[k];
+					int n3 = nodes[i].closest[k].key.intValue();
 					int n3p = (inIndex[n3] == 0 ? path.get(n-1) : path.get(inIndex[n3]-1));
 					int n3n = (inIndex[n3] == n-1 ? path.get(0) : path.get(inIndex[n3]+1));
 					
@@ -754,7 +768,7 @@ public class TSPSolver {
 				
 				for(int j = 0; j < s; j++) {
 					int jn, js, je;
-					jn = nodes[i].closest[j];
+					jn = nodes[i].closest[j].key.intValue();
 					if(path.inIndex(jn) < path.inIndex(i)) {
 						je = jn;
 						js = path.getPrevNode(je);

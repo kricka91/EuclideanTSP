@@ -123,6 +123,7 @@ public class Main {
 		
 		TSPSolver tsp = new TSPSolver();
 		Path path;
+		createTimeStamp("initialization");
 
 
 		// calculate all distances.
@@ -134,10 +135,10 @@ public class Main {
 
 
 		//get intial path
-		path = tsp.getInitialPath(nodes);
-		//path = tsp.solve(nodes);
-		//addPartRes("initial path", path);
-		//createTimeStamp("initial path");
+		//path = tsp.getInitialPath(nodes);
+		path = tsp.solve(nodes);
+		addPartRes("initial path", path);
+		createTimeStamp("initial path");
 
 		
 		

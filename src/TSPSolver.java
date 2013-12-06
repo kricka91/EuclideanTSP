@@ -833,27 +833,40 @@ public class TSPSolver {
 	 */
 	public void f3Opt(Path path, final Node[] nodes, int runningTime) {
 		int n = nodes.length;
-		long prevPathLen = getPathLength(path,nodes);
+		//long prevPathLen = getPathLength(path,nodes);
 		
-		int improvs = 0;
-		for(int j = 0; j < 15; j++) {
+		for(int j = 0; j < 20; j++) {
+			improv = false;
 			for(int i = 0; i < n; i++) {
-				oneEdge3Opt(path,nodes,i);
+				
+				if(oneEdge3Opt(path,nodes,i)) {
+					improv = true;
+					i--;
+				}
+					
+				//if(oneEdge3Opt(path,nodes,i))
+					//return;
 				//if(oneEdge3Opt(path,nodes,i))
 					//System.err.println("IMPROV");
 				
-				long pLen = getPathLength(path,nodes);
-				if(pLen >= prevPathLen) {
-					System.out.println("3opt made worse:");
-					System.out.println("old: " + prevPathLen);
-					System.out.println("new: " + pLen);
-				} else {
+				//long pLen = getPathLength(path,nodes);
+				//if(pLen >= prevPathLen) {
+					//System.out.println("3opt made worse:");
+					//System.out.println("old: " + prevPathLen);
+					//System.out.println("new: " + pLen);
+					
+				//} else {
 					//System.out.println(3opt)
-					improvs++;
-				}
+					//improvs++;
+				//}
 			}
+			if(!improv) {
+				//System.err.println("3-opt ran " + j + " times");
+				break;
+			}
+				
 		}
-		System.err.println("Improvements made: " + improvs);
+		//System.err.println("Improvements made: " + improvs);
 	}
 	
 	/*
@@ -883,7 +896,6 @@ public class TSPSolver {
 		}
 		
 		int numEdges = closestEdges.size();
-		
 		for(int i = 0; i < numEdges; i++) {
 			for(int j = i+1; j < numEdges; j++) {
 				if(try3opt(path,nodes,edgeS,closestEdges.get(i),closestEdges.get(j))) {
@@ -906,7 +918,7 @@ public class TSPSolver {
 		int e3h2 = path.getNextNode(edge3);
 		
 		int c1s,c1e,c2s,c2e,c3s,c3e;
-		
+		//long pLen = getPathLength(path,nodes);
 		c1e = e1h1;
 		c2s = e1h2;
 		
@@ -937,7 +949,7 @@ public class TSPSolver {
 		
 		//these distances appear in order in the array here
 		int[] allDists = new int[8];
-		//TODO if in crisis can make this into less additions
+		
 		allDists[0] = nodes[c1e].distances[c2s] + nodes[c2e].distances[c3s] + nodes[c3e].distances[c1s];
 		allDists[1] = nodes[c1e].distances[c2s] + nodes[c2e].distances[c3e] + nodes[c3s].distances[c1s];
 		allDists[2] = nodes[c1e].distances[c2e] + nodes[c2s].distances[c3s] + nodes[c3e].distances[c1s];
@@ -948,6 +960,8 @@ public class TSPSolver {
 		allDists[7] = nodes[c1e].distances[c3e] + nodes[c3s].distances[c2e] + nodes[c2s].distances[c1s];
 		
 		//find best configuration:
+		
+		
 		//TODO try worst configuration of those that improve?
 		int bestConfig = -1;
 		int bestPath = Integer.MAX_VALUE;
@@ -991,6 +1005,21 @@ public class TSPSolver {
 			path.flip(path.inIndex(c1s),path.inIndex(c1e));
 			break;
 		}
+		/*long pLen2 = getPathLength(path,nodes);
+		if(pLen2 > pLen) {
+			System.err.println("3opt made worse:");
+			System.err.println("best config: " + bestConfig);
+			for(int i = 0; i < 8; i++) {
+				System.err.println(allDists[i]);
+			}
+			System.err.println(e1h1+"-"+e1h2+" "+e2h1+"-"+e2h2+" "+e3h1+"-"+e3h2);
+			System.err.println("c1: " + c1s + " " + c1e);
+			System.err.println("c2: " + c2s + " " + c2e);
+			System.err.println("c3: " + c3s + " " + c3e);
+			//System.err.println(path.inIndex(edge1)+" "+path.inIndex(edge2)+" "+path.inIndex(edge3));
+			//System.out.println("old: " + pLen);
+			//System.out.println("new: " + pLen2);
+		}*/
 		return true;
 	}
 	

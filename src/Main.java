@@ -121,6 +121,8 @@ public class Main {
 	    //	System.out.print(nodes[i].x + "\t\t\t" + nodes[i].y + "\n");
 	    //}
 		
+		//test flip!
+		
 		TSPSolver tsp = new TSPSolver();
 		Path path;
 
@@ -132,74 +134,45 @@ public class Main {
 
 		// calculate all distances.
 		Node.calcAllDistances(nodes);
+		createTimeStamp("distance computation");
 		for(int i = 0; i < n; i++) {
 			nodes[i].calcClosest(10);
 		}
-		createTimeStamp("distance computation");
+		createTimeStamp("closest");
 
 
 		//get intial path
 		//path = tsp.getInitialPath(nodes);
-
-		path = tsp.solve(nodes);
-		addPartRes("initial path", path);
-		createTimeStamp("initial path");
-
 		
-		
-		//path = tsp.getInitialPath(nodes);
+		//Path path23 = tsp.getInitialPath(nodes);
 		//createTimeStamp("path");
-		//tsp.part2Opt(path,nodes);
+		//tsp.part2Opt(path23,nodes);
 		
-		
-		//tsp.full1Opt(path, nodes);
-		//createTimeStamp("dummy2opt");
-		
-		
-		
-		//solvepath = tsp.solve(nodes);
-		//addPartRes("initial path", path);
-		//createTimeStamp("return");
-		
-		
-		//improve path
-		
-		path = tsp.getInitialPath(nodes);
-		//addPartRes("initialPath", path);
-		//createTimeStamp("init");
-		
-		tsp.f2Opt(path, nodes);
-		//addPartRes("2opt", path);
-		//createTimeStamp("f2opt");
-		//improvedPath = tsp.solve(nodes);
-		//createTimeStamp("local search opt");
-		//addPartRes("2 opt", path);
-		//createTimeStamp("2 opt");
-		System.err.println("2opt length: " + tsp.getPathLength(path, nodes));
-		
-		
-		tsp.full1Opt(path, nodes);
-		addPartRes("1opt", path);
-		createTimeStamp("f1opt");
-		
-		//addPartRes("1 opt", path);
-		//createTimeStamp("f1opt");
-		
-		
-		System.err.println("1opt length: " + tsp.getPathLength(path, nodes));
-		
-		
-		//Path p = tsp.getInitialPath(nodes);
-		//createTimeStamp("init");
-		//addPartRes("start", p);
-		
-		tsp.f3Opt(path, nodes, 50);
+		//tsp.f3Opt(path23, nodes, 50);
 	
 		//path = tsp.s3opt(path, nodes);
 		//addPartRes("3 opt", path);
-		createTimeStamp("3 opt");
-		addPartRes("3-opt",path);
-		System.err.println("3opt length: " + tsp.getPathLength(path, nodes));
+		//createTimeStamp("23 opt");
+		//addPartRes("23-opt",path23);
+		//System.err.println("23opt length: " + tsp.getPathLength(path23, nodes));
+
+		
+		path = tsp.getInitialPath(nodes);
+		tsp.f3Opt(path, nodes, 50);
+		addPartRes("    3-opt NN",path);
+		System.err.println("3opt on NN length: " + tsp.getPathLength(path, nodes));
+		createTimeStamp("f3opt on NN");
+
+		
+		//Path path2 = tsp.nearestNeighbor(nodes,1);
+		//tsp.f3Opt(path2, nodes, 50);
+		
+		//Path path3 = tsp.nearestNeighbor(nodes,2);
+		//tsp.f3Opt(path3, nodes, 50);
+		
+		//createTimeStamp("3 opt");
+		//addPartRes("3-opt",path);
+		//System.err.println("3opt length: " + tsp.getPathLength(path, nodes));
 		
 		/*
 		 * MST ALGORITHM HERE

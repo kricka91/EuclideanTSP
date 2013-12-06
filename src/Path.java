@@ -11,6 +11,7 @@ public class Path {
 	public Path(ArrayList<Integer> path) {
 		p = path;
 		n = path.size();
+		inIndex = new int[n];
 		updateInIndex();
 	}
 	
@@ -124,7 +125,7 @@ public class Path {
 				swap(from+k,to-k);
 			}
 		} else {
-			int mid = ((to-from)/2)+1;
+			int mid = ((n-(from-to))/2)+1;
 			int jc = from;
 			int ic = to;
 			for(int k = 0; k < mid; k++) {

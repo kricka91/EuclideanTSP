@@ -59,7 +59,7 @@ public class Node {
 		if(x > n-1) {
 		    x = n-1;
 		}
-
+		
 		closest = (Pair<Integer, Integer>[])new Pair<?,?>[x];
 		int i;
 		int numPlaced = 0;
@@ -87,9 +87,9 @@ public class Node {
 				}
 			}
 		}
-		
-		Arrays.sort(closest, new Pair().new ValueComparator());
-		
+		//Main.createTimeStamp("calcing closest");
+		//Arrays.sort(closest, new Pair().new ValueComparator());
+		//Main.createTimeStamp("sorting");
 	}
 	
 	

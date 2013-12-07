@@ -141,6 +141,17 @@ public class Main {
 		createTimeStamp("closest");
 
 
+		ArrayList<Integer> a = new ArrayList<Integer>();
+		for(int i = 0; i < 10; i++) {
+			a.add(i);
+		}
+		Path pa = new Path(a);
+		System.err.println(a);
+		pa.flipSmart(6, 2);
+		System.err.println(a);
+		
+		
+		
 		//get intial path
 		//path = tsp.getInitialPath(nodes);
 		

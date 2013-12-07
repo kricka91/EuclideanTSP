@@ -109,6 +109,23 @@ public class Path {
 		}
 	}
 	
+	
+	public void flipSmart(int from, int to) {
+		int otherTo = from-1;
+		if(otherTo == -1)
+			otherTo = n-1;
+		int otherFrom = to+1;
+		if(otherFrom == n)
+			otherFrom = 0;
+		
+		
+		if(pathDistForward(from,to) <= pathDistForward(otherFrom,otherTo)) {
+			flip(from, to);
+		} else {
+			flip(otherFrom,otherTo);
+		}
+	}
+	
 	/*
 	 * Flip all nodes between path indices from and to.
 	 * Example 1:

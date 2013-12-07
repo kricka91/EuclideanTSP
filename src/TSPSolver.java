@@ -835,7 +835,7 @@ public class TSPSolver {
 		int n = nodes.length;
 		//long prevPathLen = getPathLength(path,nodes);
 		
-		for(int j = 0; j < 20; j++) {
+		for(int j = 0; j < 2; j++) {
 			improv = false;
 			for(int i = 0; i < n; i++) {
 				
@@ -861,7 +861,7 @@ public class TSPSolver {
 				//}
 			}
 			if(!improv) {
-				//System.err.println("3-opt ran " + j + " times");
+				System.err.println("3-opt ran " + j + " times");
 				break;
 			}
 				
@@ -979,33 +979,34 @@ public class TSPSolver {
 		case 0:
 			return false;
 		case 1: 
-			path.flip(path.inIndex(c3s),path.inIndex(c3e));
+			path.flipSmart(path.inIndex(c3s),path.inIndex(c3e));
 			break;
 		case 2:
-			path.flip(path.inIndex(c2s),path.inIndex(c2e));
+			path.flipSmart(path.inIndex(c2s),path.inIndex(c2e));
 			break;
 		case 3:
 			path.flip(path.inIndex(c2s),path.inIndex(c2e));
-			path.flip(path.inIndex(c3s),path.inIndex(c3e));
+			path.flipSmart(path.inIndex(c3s),path.inIndex(c3e));
 			break;
 		case 4:
 			path.flip(path.inIndex(c1s),path.inIndex(c1e));
 			path.flip(path.inIndex(c2s),path.inIndex(c2e));
-			path.flip(path.inIndex(c3s),path.inIndex(c3e));
+			path.flipSmart(path.inIndex(c3s),path.inIndex(c3e));
 			break;
 		case 5:
 			path.flip(path.inIndex(c1s),path.inIndex(c1e));
-			path.flip(path.inIndex(c3s),path.inIndex(c3e));
+			path.flipSmart(path.inIndex(c3s),path.inIndex(c3e));
 			break;
 		case 6:
 			path.flip(path.inIndex(c1s),path.inIndex(c1e));
-			path.flip(path.inIndex(c2s),path.inIndex(c2e));
+			path.flipSmart(path.inIndex(c2s),path.inIndex(c2e));
 			break;
 		case 7:
-			path.flip(path.inIndex(c1s),path.inIndex(c1e));
+			path.flipSmart(path.inIndex(c1s),path.inIndex(c1e));
 			break;
 		}
-		/*long pLen2 = getPathLength(path,nodes);
+		/*
+		long pLen2 = getPathLength(path,nodes);
 		if(pLen2 > pLen) {
 			System.err.println("3opt made worse:");
 			System.err.println("best config: " + bestConfig);
@@ -1019,7 +1020,8 @@ public class TSPSolver {
 			//System.err.println(path.inIndex(edge1)+" "+path.inIndex(edge2)+" "+path.inIndex(edge3));
 			//System.out.println("old: " + pLen);
 			//System.out.println("new: " + pLen2);
-		}*/
+		}
+		*/
 		return true;
 	}
 	

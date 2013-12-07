@@ -833,17 +833,21 @@ public class TSPSolver {
 	 */
 	public void f3Opt(Path path, final Node[] nodes, int runningTime) {
 		int n = nodes.length;
+		int timeLeft = runningTime;
 		//long prevPathLen = getPathLength(path,nodes);
-		
-		for(int j = 0; j < 2; j++) {
+		long stamp = System.currentTimeMillis();
+		for(int j = 0; j < 4; j++) {
 			improv = false;
-			for(int i = 0; i < n; i++) {
+			long tmp = System.currentTimeMillis();
+			for(int i = 0; i < n && timeLeft > 0; i++) {
 				
 				if(oneEdge3Opt(path,nodes,i)) {
 					improv = true;
 					i--;
 				}
-					
+				long nStamp = System.currentTimeMillis();
+				timeLeft -= (nStamp - stamp);
+				stamp = nStamp;
 				//if(oneEdge3Opt(path,nodes,i))
 					//return;
 				//if(oneEdge3Opt(path,nodes,i))
@@ -861,7 +865,7 @@ public class TSPSolver {
 				//}
 			}
 			if(!improv) {
-				System.err.println("3-opt ran " + j + " times");
+				//System.err.println("3-opt ran " + j + " times");
 				break;
 			}
 				

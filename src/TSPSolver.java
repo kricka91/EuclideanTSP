@@ -215,11 +215,15 @@ public class TSPSolver {
 	}
 	
 	public Path greedyEdge(final Node[] allNodes) {
-		//TODO maybe
+		//TODO
 		
 		
 		
 		
+		
+		
+		
+		//Path res = new Path();
 		return null;
 	}
 	

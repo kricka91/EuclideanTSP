@@ -178,9 +178,10 @@ public class Main {
         tsp.f3Opt(path, nodes, 100);
         addPartRes("3 opt initial", path);
         createTimeStamp("initial path");
+
         
         long pLen = tsp.getPathLength(path, nodes);
-        //System.err.println("initial length: " + pLen);
+        System.err.println("initial length: " + pLen);
         long stamp = System.currentTimeMillis();
         Random r = new Random();
         Path ptmp = (Path) path.clone();
@@ -201,10 +202,10 @@ public class Main {
                 }
                 iters++;
         }
-		//addPartRes("final path", path);
-		//createTimeStamp("loop");
-		//System.err.println("iters made: " + iters + ". Improvements made: " + improvs);
-		//System.err.println("final length: " + tsp.getPathLength(path, nodes));
+		addPartRes("final path", path);
+		createTimeStamp("loop");
+		System.err.println("iters made: " + iters + ". Improvements made: " + improvs);
+		System.err.println("final length: " + tsp.getPathLength(path, nodes));
 		
 		//full 3-opt
 		/*Path pa = tsp.getInitialPath(nodes);

@@ -63,15 +63,21 @@ public class Node {
 		closest = (Pair<Integer, Integer>[])new Pair<?,?>[x];
 		int i;
 		int numPlaced = 0;
+		int worst = Integer.MIN_VALUE;
 		for(i = 0; numPlaced < x; i++) {
 			if(i != index) {
 				closest[numPlaced] = new Pair(new Integer(i), new Integer(distances[i]));
 				numPlaced++;
+				if(distances[i] > worst)
+					worst = distances[i];
 			}
 		}
 		
 		for(; i < n; i++) {
 			if(i != index) {
+				if(distances[i] > worst)
+					continue;
+				
 				//int dist = distances[i];
 				int worstDist = Integer.MIN_VALUE;
 				int worstIndex = -1;
@@ -84,7 +90,18 @@ public class Node {
 				
 				if(distances[i] < worstDist) {
 					closest[worstIndex] = new Pair(new Integer(i), new Integer(distances[i]));
+					
+					worst = Integer.MIN_VALUE;
+					for(int j = 0; j < x; j++) {
+						if(distances[closest[j].key] > worst) {
+							worst = distances[closest[j].key];
+						}
+					}
+					
 				}
+				
+
+				
 			}
 		}
 		//Main.createTimeStamp("calcing closest");

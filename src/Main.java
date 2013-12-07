@@ -3,26 +3,28 @@ import java.util.Scanner;
 import java.util.Random;
 
 public class Main {
-	private static boolean measureTime = true, drawSolution = true, printSolution = false;
+	private static boolean measureTime = false, drawSolution = false, printSolution = true;
 	private static long startTime, endTime, partialTime;
 	private static ArrayList<String> partialTimeNames;
 	private static ArrayList<Long> partialTimes;
 	private static ArrayList<Path> partRes;
 	private static ArrayList<String> partResNames;
+	private static Kattio io = new Kattio(System.in, System.out);
 
 	/**
 	 * Read data from System.in
 	 * @return An array of all nodes.
 	 */
 	public static Node[] readData() {
-		Scanner sc = new Scanner(System.in);
-		int n = sc.nextInt(); //n = number of nodes
+		//Scanner sc = new Scanner(System.in);
+		int n = io.getInt();
+		//int n = io.nextInt(); //n = number of nodes
 		
 		//read data
 		Node[] nodes = new Node[n];
 		for(int i = 0; i < n; i++) {
-			double x = sc.nextDouble();
-			double y = sc.nextDouble();
+			double x = io.getDouble();
+			double y = io.getDouble();
 			nodes[i] = new Node(x,y,n,i);
 		}
 		return nodes;
@@ -140,7 +142,7 @@ public class Main {
 		}
 		createTimeStamp("closest");
 
-
+		/*
 		ArrayList<Integer> a = new ArrayList<Integer>();
 		for(int i = 0; i < 10; i++) {
 			a.add(i);
@@ -149,7 +151,7 @@ public class Main {
 		System.err.println(a);
 		pa.flipSmart(6, 2);
 		System.err.println(a);
-		
+		*/
 		
 		
 		//get intial path
@@ -166,13 +168,59 @@ public class Main {
 		//createTimeStamp("23 opt");
 		//addPartRes("23-opt",path23);
 		//System.err.println("23opt length: " + tsp.getPathLength(path23, nodes));
-
 		
+        path = tsp.getInitialPath(nodes);
+        tsp.f3Opt(path, nodes, 100);
+        //addPartRes("3 opt initial", path);
+        //createTimeStamp("initial path");
+        
+        long pLen = tsp.getPathLength(path, nodes);
+        //System.err.println("initial length: " + pLen);
+        long stamp = System.currentTimeMillis();
+        Random r = new Random();
+        Path ptmp = (Path) path.clone();
+        
+        int iters = 0;
+        int improvs = 0;
+        while(System.currentTimeMillis() - stamp < 1000) {
+                //make a few... adjustments huehue
+                //Path ptmp = (Path) path.clone();
+                ptmp.swap(r.nextInt(n), r.nextInt(n));
+                tsp.f3Opt(ptmp, nodes, 50);
+                long tmpLen = tsp.getPathLength(ptmp, nodes);
+                if(tmpLen < pLen) {
+                        path = (Path) ptmp.clone();
+                        pLen = tmpLen;
+                        improvs++;
+                        //addPartRes("improvement made!", path);
+                }
+                iters++;
+        }
+		//addPartRes("final path", path);
+		//createTimeStamp("loop");
+		//System.err.println("iters made: " + iters + ". Improvements made: " + improvs);
+		//System.err.println("final length: " + tsp.getPathLength(path, nodes));
+		
+		//full 3-opt
+		/*Path pa = tsp.getInitialPath(nodes);
+		tsp.f3Opt(pa, nodes, 5000);
+		addPartRes("just full 3opt", path);
+		createTimeStamp("full 3opt");
+		System.err.println("full3opt path length: " + tsp.getPathLength(pa, nodes));
+		*/
+		/*
 		path = tsp.getInitialPath(nodes);
-		tsp.f3Opt(path, nodes, 50);
+		tsp.f3Opt(path, nodes, 500);
 		addPartRes("    3-opt NN",path);
-		System.err.println("3opt on NN length: " + tsp.getPathLength(path, nodes));
-		createTimeStamp("f3opt on NN");
+		System.err.println("3opt 500ms: " + tsp.getPathLength(path, nodes));
+		createTimeStamp("f3opt 500ms");
+		
+		Path path2 = tsp.getInitialPath(nodes);
+		tsp.f3Opt(path2, nodes, 50);
+		addPartRes("    3-opt 50 ms",path2);
+		System.err.println("3opt 50ms: " + tsp.getPathLength(path2, nodes));
+		createTimeStamp("f3opt 50ms");
+		*/
 
 		
 		//Path path2 = tsp.nearestNeighbor(nodes,1);
@@ -263,8 +311,10 @@ public class Main {
 	 */
 	public static void printPath(Path path) {
 		for(int i = 0; i < path.size(); i++) {
-			System.out.println(path.get(i));
+			io.println(path.get(i));
+			//System.out.println(path.get(i));
 		}
+		io.close();
 	}
 	
 }

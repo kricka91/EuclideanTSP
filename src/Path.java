@@ -157,7 +157,7 @@ public class Path {
 		}
 	}
 	
-	private void swap(int i, int j) {
+	public void swap(int i, int j) {
 		int tmp = p.get(i);
 		set(i,p.get(j));
 		set(j, tmp);

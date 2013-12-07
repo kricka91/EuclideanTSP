@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.lang.Math;
 
@@ -217,14 +219,65 @@ public class TSPSolver {
 	public Path greedyEdge(final Node[] allNodes) {
 		//TODO
 		
+		//Collect all closest edges and sort them in descending order
+		ArrayList<Pair<Pair<Integer,Integer>, Integer>> edges;
+		edges = new ArrayList<Pair<Pair<Integer,Integer>, Integer>>();
+		edges.ensureCapacity(allNodes.length*allNodes[0].closest.length);
 		
+		Node n;
+		for (int i = 0;i<allNodes.length;i++) {
+			for (int j = 0;j<allNodes[i].closest.length;j++) {
+				n = allNodes[i];
+				if (n.index < n.closest[j].key) {
+					edges.add(new Pair(new Pair(n.index, n.closest[j].key), n.closest[j].value));
+				}
+			}
+		}
+		Collections.sort(edges, new Pair().new ValueInvComparator());
+
+		System.err.println("Number of edges in contention: " + edges.size());
+		System.err.println("Edges are:\n" + edges);
 		
+		HashMap<Integer, Integer> path = new HashMap<Integer, Integer>();
+		Pair<Integer, Integer> curEdge;
+		/*
+		Integer firstNode, lastNode;
+		Pair<Integer, Integer> firstEdge = edges.get(edges.size()-1).key;
+		edges.remove(edges.size()-1);
+		path.put(firstEdge.key, firstEdge.value);
+		firstNode = firstEdge.key;
+		lastNode = firstEdge.value;
+		*/
 		
+		for (int i = edges.size()-1;i>=0;i--) {
+			curEdge = edges.get(i).key;
+			if (!path.containsKey(curEdge.key) && !path.containsValue(curEdge.value)
+					&& !(path.containsKey(curEdge.value) && path.containsValue(curEdge.key))) {
+				//Qualified edge
+				System.err.println("Qualified edge! " + curEdge);
+				System.err.println("Path contains:\n" + path);
+				path.put(curEdge.key, curEdge.value);
+			}
+			edges.remove(i);
+		}
 		
+		System.err.println("Path is of size: " + path.size());
+		System.err.println("Path contains:\n" + path);
 		
+		System.err.println("Number of nodes: " + allNodes.length);
+		System.err.println("Number of edges left in contention: " + edges.size());
 		
-		//Path res = new Path();
-		return null;
+		ArrayList<Integer> res = new ArrayList<Integer>();
+		res.ensureCapacity(path.size());
+		Integer curNode = new Integer(0);
+		int pathLength = path.size();
+		for (int i = 0;i < pathLength;i++) {
+			res.add(curNode);
+			curNode = path.get(curNode);
+		}
+		
+		Path resPath = new Path(res);
+		return resPath;
 	}
 	
 	public Path nearestNeighbor(final Node[] allNodes, int startNode) {

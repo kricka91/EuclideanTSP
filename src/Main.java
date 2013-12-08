@@ -3,7 +3,10 @@ import java.util.Scanner;
 import java.util.Random;
 
 public class Main {
-	private static boolean measureTime = false, drawSolution = false, printSolution = true;
+
+	private static boolean measureTime = true;
+	private static boolean drawSolution = true;
+	private static boolean printSolution = false;
 	private static long startTime, endTime, partialTime;
 	private static ArrayList<String> partialTimeNames;
 	private static ArrayList<Long> partialTimes;
@@ -95,9 +98,9 @@ public class Main {
 		
 		Node[] nodes = null;
 		partRes = new ArrayList<Path>();
-		//partRes.add(new ArrayList<Integer>());	//Add empty path
+		partRes.add(new Path(new ArrayList<Integer>()));	//Add empty path
 		partResNames = new ArrayList<String>();
-		//partResNames.add("Start");
+		partResNames.add("Start");
 		
 		if(args.length == 0) {
 			//read from System.in
@@ -176,6 +179,7 @@ public class Main {
 		path = new Path(a);
 		*/
 		
+
         path = tsp.getInitialPath(nodes);
        // addPartRes("     NN", path);
         
@@ -184,6 +188,7 @@ public class Main {
        // addPartRes("3 opt initial", path);
         //createTimeStamp("initial path");
         
+
         
         long pLen = tsp.getPathLength(path, nodes);
         //System.err.println("initial length: " + pLen);

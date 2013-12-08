@@ -25,6 +25,7 @@ Node::Node(double x, double y, int n, int index) {
 	this->index = index;
 	distances = vector<int>();
 	distances.resize(n);
+	closest = vector<short>();
 }
 
 
@@ -36,8 +37,7 @@ void Node::calcClosest(int x) {
 	if(x > n-1) {
 	    x = n-1;
 	}
-	
-	closest = vector<int>();
+
 	closest.resize(x);
 	int i;
 	int numPlaced = 0;
@@ -57,7 +57,7 @@ void Node::calcClosest(int x) {
 				continue;
 			}
 
-			int worstDist = Integer.MIN_VALUE;
+			int worstDist = MIN_INT;
 			int worstIndex = -1;
 			for(int j = 0; j < x; j++) {
 				if(distances[closest[j]] > worstDist) {
@@ -69,7 +69,7 @@ void Node::calcClosest(int x) {
 			if(distances[i] < worstDist) {
 				closest[worstIndex] = i;
 				
-				worst = Integer.MIN_VALUE;
+				worst = MIN_INT;
 				for(int j = 0; j < x; j++) {
 					if(distances[closest[j]] > worst) {
 						worst = distances[closest[j]];
@@ -81,7 +81,7 @@ void Node::calcClosest(int x) {
 }
 
 void calcAllDistances(vector<Node> allNodes) {
-	int n = allNodes.length;
+	int n = allNodes.size();
 	for(int i = 0; i < n; i++) {
 		for(int j = i+1; j < n; j++) {
 			int dist = allNodes[i].calcDistanceTo(allNodes[j]);

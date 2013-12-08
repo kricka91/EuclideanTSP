@@ -66,7 +66,7 @@ Path nearestNeighbor(vector<Node> allNodes, int startNode) {
 	int n = allNodes.size();
 	
 	vector<short> pathA = vector<short>();
-	bool used[] = bool[n];
+	bool used[n];
 	vector<short> inIndex = vector<short>();
 	inIndex.resize(n);
 	
@@ -90,18 +90,6 @@ Path nearestNeighbor(vector<Node> allNodes, int startNode) {
 	return Path(pathA,inIndex);
 }
 
-int findClosest(Node node, bool used[]) {
-	int n = node.n;
-	vector<int> possibilities;
-	possibilities = vector<short>();
-	possibilities.resize(n);
-	possibilities[0] = 0;
-	for(int i = 1; i < n; i++) {
-		possibilities[i] = i;
-	}
-	return findClosest(possibilities, node, used);
-}
-
 int findClosest(vector<int> possibilities, Node node, bool used[]) {
 	int minDist = MAX_INT;
 	int minIndex = -1;
@@ -119,6 +107,17 @@ int findClosest(vector<int> possibilities, Node node, bool used[]) {
 	return minIndex;
 }
 
+int findClosest(Node node, bool used[]) {
+	int n = node.n;
+	vector<short> possibilities;
+	possibilities = vector<short>();
+	possibilities.resize(n);
+	possibilities[0] = 0;
+	for(int i = 1; i < n; i++) {
+		possibilities[i] = i;
+	}
+	return findClosest(possibilities, node, used);
+}
 
 
 void f2Opt(Path path, vector<Node> allNodes) {
@@ -239,7 +238,7 @@ void full1Opt(Path path, vector<Node> nodes) {
 			for(int j = 0; j < s; j++) {
 				int jn, js, je;
 				jn = nodes[i].closest[j];
-				if(path.inIndex(jn) < path.inIndex(i)) {
+				if(path.inIndexGet(jn) < path.inIndexGet(i)) {
 					je = jn;
 					js = path.getPrevNode(je);
 					if(je == i || js == i)
@@ -421,30 +420,30 @@ bool try3opt(Path path, vector<Node> nodes, int edge1, int edge2, int edge3) {
 		case 0:
 			return false;
 		case 1: 
-			path.flipSmart(path.inIndex(c3s),path.inIndex(c3e));
+			path.flipSmart(path.inIndexGet(c3s),path.inIndexGet(c3e));
 			break;
 		case 2:
-			path.flipSmart(path.inIndex(c2s),path.inIndex(c2e));
+			path.flipSmart(path.inIndexGet(c2s),path.inIndexGet(c2e));
 			break;
 		case 3:
-			path.flip(path.inIndex(c2s),path.inIndex(c2e));
-			path.flipSmart(path.inIndex(c3s),path.inIndex(c3e));
+			path.flip(path.inIndexGet(c2s),path.inIndexGet(c2e));
+			path.flipSmart(path.inIndexGet(c3s),path.inIndexGet(c3e));
 			break;
 		case 4:
-			path.flip(path.inIndex(c1s),path.inIndex(c1e));
-			path.flip(path.inIndex(c2s),path.inIndex(c2e));
-			path.flipSmart(path.inIndex(c3s),path.inIndex(c3e));
+			path.flip(path.inIndexGet(c1s),path.inIndexGet(c1e));
+			path.flip(path.inIndexGet(c2s),path.inIndexGet(c2e));
+			path.flipSmart(path.inIndexGet(c3s),path.inIndexGet(c3e));
 			break;
 		case 5:
-			path.flip(path.inIndex(c1s),path.inIndex(c1e));
-			path.flipSmart(path.inIndex(c3s),path.inIndex(c3e));
+			path.flip(path.inIndexGet(c1s),path.inIndexGet(c1e));
+			path.flipSmart(path.inIndexGet(c3s),path.inIndexGet(c3e));
 			break;
 		case 6:
-			path.flip(path.inIndex(c1s),path.inIndex(c1e));
-			path.flipSmart(path.inIndex(c2s),path.inIndex(c2e));
+			path.flip(path.inIndexGet(c1s),path.inIndexGet(c1e));
+			path.flipSmart(path.inIndexGet(c2s),path.inIndexGet(c2e));
 			break;
 		case 7:
-			path.flipSmart(path.inIndex(c1s),path.inIndex(c1e));
+			path.flipSmart(path.inIndexGet(c1s),path.inIndexGet(c1e));
 			break;
 	}
 
@@ -460,6 +459,4 @@ void addIfNotIn(vector<short> al, int i) {
 	}
 	al.push_back(i);
 }
-
-
 

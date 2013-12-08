@@ -20,7 +20,7 @@ public:
 	void updateInIndex();
 	int get(int i);
 	void set(int i, int val);
-	int inIndex(int nodeIndex);
+	int inIndexGet(int nodeIndex);
 	int size();
 	bool isEmpty();
 	int getPrevNode(int node);
@@ -32,7 +32,7 @@ public:
 	int pathDistForward(int from, int to);
 	int pathDistBackward(int from, int to);
 	
-	short operator [] (const int i) const;
+	short operator [] (const int& i) const;
 	
 
 };

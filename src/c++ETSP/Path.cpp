@@ -56,7 +56,7 @@ void Path::set(int i, int val) {
 /*
   Get the index in the path of the node nodeIndex.
  */
-int Path::inIndex(int nodeIndex) {
+int Path::inIndexGet(int nodeIndex) {
 	return inIndex[nodeIndex];
 }
 
@@ -165,8 +165,8 @@ void Path::flip(int from, int to) {
 
 void Path::swap(int i, int j) {
 	int tmp = p[i];
-	set(i,p.get(j));
-	set(j, tmp);
+	Path::set(i,p[j]);
+	Path::set(j, tmp);
 }
 
 /*
@@ -191,7 +191,7 @@ int Path::pathDistBackward(int from, int to) {
 	return pathDistForward(to,from);
 }
 
-short Path::operator [] (const int i) const {
+short Path::operator [] (const int& i) const {
 	return p[i];
 }
 

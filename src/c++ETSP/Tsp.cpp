@@ -31,10 +31,9 @@ void readData(vector<Node> nodes) {
 	scanf("%d", &n);
 	nodes.reserve(n);
 	for(int i = 0; i < n; i++) {
-		scanf("%f %f", x, y);
+		scanf("%lg %lg", x, y);
 		nodes[i] = Node(x,y,n,i);
-	}
-	return nodes;		
+	}		
 }
 
 

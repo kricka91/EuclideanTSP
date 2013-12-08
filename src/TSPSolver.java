@@ -289,6 +289,7 @@ public class TSPSolver {
 		int n = allNodes.length;
 		
 		ArrayList<Integer> pathA = new ArrayList<Integer>();
+		pathA.ensureCapacity(allNodes.length);
 		boolean[] used = new boolean[n];
 		int[] inIndex = new int[n];
 		
@@ -938,6 +939,7 @@ public class TSPSolver {
 	public boolean oneEdge3Opt(Path path, final Node[] nodes, int edge) {
 		//pick out the closest edges to edge
 		ArrayList<Integer> closestEdges = new ArrayList<Integer>();
+		closestEdges.ensureCapacity(50);
 		int edgeS = edge;
 		int edgeE = path.getNextNode(edgeS);
 		

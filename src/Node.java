@@ -6,7 +6,6 @@ public class Node {
 
 	public final double x, y, angle;
 	public final int index, n;
-	public static final double INVSQRT2 = 1.0/Math.sqrt(2.0);
 	
 	int[] distances;
 	int[] closest;
@@ -98,9 +97,6 @@ public class Node {
 					}
 					
 				}
-				
-
-				
 			}
 		}
 	}

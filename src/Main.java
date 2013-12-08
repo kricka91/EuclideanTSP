@@ -3,7 +3,7 @@ import java.util.Scanner;
 import java.util.Random;
 
 public class Main {
-	private static boolean measureTime = true, drawSolution = true, printSolution = false;
+	private static boolean measureTime = false, drawSolution = false, printSolution = true;
 	private static long startTime, endTime, partialTime;
 	private static ArrayList<String> partialTimeNames;
 	private static ArrayList<Long> partialTimes;
@@ -169,23 +169,34 @@ public class Main {
 		//addPartRes("23-opt",path23);
 		//System.err.println("23opt length: " + tsp.getPathLength(path23, nodes));
 		
+		/*ArrayList<Integer> a = new ArrayList<Integer>();
+		for(int i = 0; i < n; i++) {
+			a.add(i);
+		}
+		path = new Path(a);
+		*/
+		
         path = tsp.getInitialPath(nodes);
+       // addPartRes("     NN", path);
+        
+        //createTimeStamp("init");
         tsp.f3Opt(path, nodes, 100);
-        addPartRes("3 opt initial", path);
-        createTimeStamp("initial path");
+       // addPartRes("3 opt initial", path);
+        //createTimeStamp("initial path");
         
         
         long pLen = tsp.getPathLength(path, nodes);
-        System.err.println("initial length: " + pLen);
+        //System.err.println("initial length: " + pLen);
         long stamp = System.currentTimeMillis();
         Random r = new Random();
-        Path ptmp = (Path) path.clone();
+        //Path ptmp = (Path) path.clone();
         
         int iters = 0;
         int improvs = 0;
-        while(System.currentTimeMillis() - stamp < 1000) {
+        while(System.currentTimeMillis() - stamp < 1250) {
                 //make a few... adjustments huehue
-                //Path ptmp = (Path) path.clone();
+                Path ptmp = (Path) path.clone();
+                ptmp.swap(r.nextInt(n), r.nextInt(n));
                 ptmp.swap(r.nextInt(n), r.nextInt(n));
                 tsp.f3Opt(ptmp, nodes, 50);
                 long tmpLen = tsp.getPathLength(ptmp, nodes);
@@ -197,10 +208,10 @@ public class Main {
                 }
                 iters++;
         }
-		addPartRes("final path", path);
-		createTimeStamp("loop");
-		System.err.println("iters made: " + iters + ". Improvements made: " + improvs);
-		System.err.println("final length: " + tsp.getPathLength(path, nodes));
+		//addPartRes("final path", path);
+		//createTimeStamp("loop");
+		//System.err.println("iters made: " + iters + ". Improvements made: " + improvs);
+		//System.err.println("final length: " + tsp.getPathLength(path, nodes));
 		
 		//full 3-opt
 		/*Path pa = tsp.getInitialPath(nodes);

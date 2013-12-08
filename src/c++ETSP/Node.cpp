@@ -25,7 +25,6 @@ Node::Node(double x, double y, int n, int index) {
 	this->index = index;
 	distances = vector<int>();
 	distances.resize(n);
-	closest = vector<short>();
 }
 
 

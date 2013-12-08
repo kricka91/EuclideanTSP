@@ -10,6 +10,8 @@ class Node;
 
 using namespace std;
 
+int getTime();
+int timeSinceStart();
 Path solve(vector<Node> allNodes);
 Path getInitialPath(vector<Node> allNodes);
 Path nearestNeighbor(vector<Node> allNodes, int startNode);

@@ -7,6 +7,7 @@
 #include "Path.h"
 #include "TSPSolver.h"
 #include "Node.h"
+#include "timing.h"
 
 #define MIN_INT -2147483648
 #define MAX_INT 2147483647
@@ -292,22 +293,22 @@ void f3Opt(Path path, vector<Node> nodes, int runningTime) {
 	int n = nodes.size();
 	int timeLeft = runningTime;
 	//long prevPathLen = getPathLength(path,nodes);
-	long stamp = time(NULL)*(1000.0);
+	long stamp = getTime();
 	for(int j = 0; j < 4; j++) {
 		improv = false;
-		long tmp = time(NULL)*(1000.0);
+		long tmp = getTime();
 		for(int i = 0; i < n && timeLeft > 0; i++) {
 			
 			if(oneEdge3Opt(path,nodes,i)) {
 				improv = true;
 				i--;
 			}
-			long nStamp = time(NULL)*(1000.0);
+			long nStamp = getTime();
 			timeLeft -= (nStamp - stamp);
 			stamp = nStamp;
 		}
 		if(!improv) {
-			//System.err.println("3-opt ran " + j + " times");
+			//fprintf(stderr, "3-opt ran %d times\n", j);
 			break;
 		}
 			

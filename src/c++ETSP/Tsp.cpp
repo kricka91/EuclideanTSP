@@ -3,11 +3,11 @@
 #include <cstdio>
 #include <vector>
 #include <random>
-#include <ctime>
 
 #include "Path.h"
 #include "TSPSolver.h"
 #include "Node.h"
+#include "timing.h"
 
 #define MIN_INT -2147483648
 #define MAX_INT 2147483647
@@ -16,16 +16,13 @@
 
 using namespace std;
 
-long startTime, endTime, partialTime;
-bool measureTime = true;
-
 void printPath(Path path) {
 	for(int i = 0; i < path.size(); i++) {
 		fprintf(stdout, "%d\n", path.get(i));
 	}
 }
 
-void readData(vector<Node> nodes) {
+void readData(vector<Node>& nodes) {
 	int n;
 	double x, y;
 	scanf("%d", &n);
@@ -36,44 +33,43 @@ void readData(vector<Node> nodes) {
 	}		
 }
 
-vector<Node>& genRandomProblem(int n) {
-	vector<Node> nodes = vector<Node>();
-	srand(time(NULL));
+vector<Node>& genRandomProblem(vector<Node>& nodes, int n) {
+	nodes.reserve(n);
+	srand(getTime());
 	double x, y;
 	for(int i = 0; i < n; i++) {
 		x = ((double)rand()/(double)(RAND_MAX))*1000000;
-		y = ((double)rand()/(double)(RAND_MAX))*1000000; 
+		y = ((double)rand()/(double)(RAND_MAX))*1000000;
+		fprintf(stderr, "Generating node %d: (%d %d)\n", i, x, y);
 		nodes.push_back(Node(x,y,n,i));
 	}
 	return nodes;
 }
 
 int main(int argc, char** argv) {
+	startTime = getTime();
 	srand(time(NULL));
-	
-	vector<Node> nodes;
+
+	vector<Node> nodes = *(new vector<Node>());
 	
 	if (argc > 1) {
-		if (argv[0] = "gen") {
-			nodes = genRandomProblem(100);
-		}
+		fprintf(stderr, "Generating 10 nodes\n");
+		nodes = genRandomProblem(nodes, 10);
 	} else {
 		readData(nodes);
 	}
 	
+	fprintf(stderr, "Checkpoint -2\n");
 	
 	if (measureTime) {
 
 	}
-	
-	
-	
+
 	int n = nodes.size();
 	
 	Path path;
 	Path solvepath;
-
-
+	fprintf(stderr, "Checkpoint -1\n");
 
 	// calculate all distances.
 	calcAllDistances(nodes);
@@ -82,22 +78,23 @@ int main(int argc, char** argv) {
 		nodes[i].calcClosest(10);
 	}
 	//createTimeStamp("closest");
-
-
+	fprintf(stderr, "Checkpoint 0\n");
 
     path = getInitialPath(nodes);
     f3Opt(path, nodes, 100);
-
-
     
     long pLen = getPathLength(path, nodes);
     long stamp = time(NULL);
     Path ptmp = path;
-
   
     int iters = 0;
     int improvs = 0;
-    while(time(NULL) - stamp < 1000) {
+    
+    fprintf(stderr, "Checkpoint 1\n");
+    fprintf(stderr, "Time since start: %d\n", timeSinceStart());
+    
+    while(timeSinceStart() < 1950000) {
+    	//fprintf(stderr, "One iteration %d\n", getTime());
         //make a few... adjustments huehue
         //Path ptmp = (Path) path.clone();
         ptmp.swap(rand()%n, rand()%n);
@@ -111,10 +108,11 @@ int main(int argc, char** argv) {
         }
         iters++;
     }
+    
+    fprintf(stderr, "Checkpoint 2\n");
+    fprintf(stderr, "Time since start: %d\n", timeSinceStart());
 
-	
 	printPath(path);
-
 }
 
 

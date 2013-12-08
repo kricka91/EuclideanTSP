@@ -66,18 +66,26 @@ Path getInitialPath(vector<Node> allNodes) {
 Path nearestNeighbor(vector<Node> allNodes, int startNode) {
 	//start node is 0
 	//assumes calcClosest have been called on all
+	fprintf(stderr, "Checkpoint NN1\n");
+	fprintf(stderr, "allNodes.size() is %d\n", (int)allNodes.size());
 	int n = allNodes.size();
+	fprintf(stderr, "Checkpoint NN2\n");
 	
 	vector<short> pathA = vector<short>();
 	bool used[n];
 	vector<short> inIndex = vector<short>();
 	inIndex.resize(n);
+	fprintf(stderr, "Checkpoint NN3\n");
 	
 	//int startNode = 0;
 	pathA.push_back(startNode);
+	fprintf(stderr, "Checkpoint NN4\n");
 	inIndex[startNode] = 0;
+	fprintf(stderr, "Checkpoint NN5\n");
 	int last = startNode;
+	fprintf(stderr, "Checkpoint NN6\n");
 	used[startNode] = true;
+	fprintf(stderr, "Checkpoint NN7\n");
 	
 	for(int i = 1; i < n; i++) {
 		//find closest

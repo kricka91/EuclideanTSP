@@ -29,11 +29,11 @@ void readData(vector<Node>& nodes) {
 	nodes.reserve(n);
 	for(int i = 0; i < n; i++) {
 		scanf("%lg %lg", &x, &y);
-		nodes[i] = Node(x,y,n,i);
+		nodes.push_back(Node(x,y,n,i));
 	}		
 }
 
-vector<Node>& genRandomProblem(vector<Node>& nodes, int n) {
+void genRandomProblem(vector<Node>& nodes, int n) {
 	nodes.reserve(n);
 	srand(getTime());
 	double x, y;
@@ -49,12 +49,13 @@ vector<Node>& genRandomProblem(vector<Node>& nodes, int n) {
 int main(int argc, char** argv) {
 	startTime = getTime();
 	srand(time(NULL));
+	rand();
 
-	vector<Node> nodes = *(new vector<Node>());
+	vector<Node> nodes = new vector<Node>();
 	
 	if (argc > 1) {
 		fprintf(stderr, "Generating 10 nodes\n");
-		nodes = genRandomProblem(nodes, 10);
+		genRandomProblem(nodes, 10);
 	} else {
 		readData(nodes);
 	}
@@ -81,7 +82,9 @@ int main(int argc, char** argv) {
 	fprintf(stderr, "Checkpoint 0\n");
 
     path = getInitialPath(nodes);
+    fprintf(stderr, "Checkpoint 0.1\n");
     f3Opt(path, nodes, 100);
+    fprintf(stderr, "Checkpoint 0.2\n");
     
     long pLen = getPathLength(path, nodes);
     long stamp = time(NULL);

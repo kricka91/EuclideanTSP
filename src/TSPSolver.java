@@ -216,6 +216,7 @@ public class TSPSolver {
 		return nearestNeighbor(allNodes,0);
 	}
 	
+	/*
 	public Path greedyEdge(final Node[] allNodes) {
 		//TODO
 		
@@ -240,6 +241,7 @@ public class TSPSolver {
 		
 		HashMap<Integer, Integer> path = new HashMap<Integer, Integer>();
 		Pair<Integer, Integer> curEdge;
+		*/
 		/*
 		Integer firstNode, lastNode;
 		Pair<Integer, Integer> firstEdge = edges.get(edges.size()-1).key;
@@ -248,7 +250,7 @@ public class TSPSolver {
 		firstNode = firstEdge.key;
 		lastNode = firstEdge.value;
 		*/
-		
+		/*
 		for (int i = edges.size()-1;i>=0;i--) {
 			curEdge = edges.get(i).key;
 			if (!path.containsKey(curEdge.key) && !path.containsValue(curEdge.value)
@@ -279,6 +281,7 @@ public class TSPSolver {
 		Path resPath = new Path(res);
 		return resPath;
 	}
+	*/
 	
 	public Path nearestNeighbor(final Node[] allNodes, int startNode) {
 		//start node is 0
@@ -311,27 +314,25 @@ public class TSPSolver {
 	
 	private int findClosest(Node node, boolean[] used) {
 		int n = node.n;
-		Pair<Integer, Integer>[] possibilities = (Pair<Integer, Integer>[])new Pair<?,?>[n];
-		possibilities[0] = new Pair(new Integer(0), null);
+		int[] possibilities = new int[n];
+		possibilities[0] = 0;
 		for(int i = 1; i < n; i++) {
-			possibilities[i] = new Pair(new Integer(i), null);
+			possibilities[i] = i;
 		}
 		return findClosest(possibilities, node, used);
 	}
 	
-	private int findClosest(Pair<Integer,Integer>[] possibilities, Node node, boolean[] used) {
+	private int findClosest(int[] possibilities, Node node, boolean[] used) {
 		int minDist = Integer.MAX_VALUE;
 		int minIndex = -1;
 		//System.err.println("possibilities is of length: " + possibilities.length);
 		for(int i = 0; i < possibilities.length; i++) {
 			//System.err.println("i is: " + i);
-			Pair<Integer, Integer> tmpPair = possibilities[i];
-			Integer tmpi = tmpPair.key;
-			int tmpint = tmpi.intValue();
+			int tmpint = possibilities[i];
 			if(!used[tmpint]) {
-				if(node.distances[possibilities[i].key.intValue()] < minDist) {
-					minDist = node.distances[possibilities[i].key.intValue()];
-					minIndex = possibilities[i].key.intValue();
+				if(node.distances[possibilities[i]] < minDist) {
+					minDist = node.distances[possibilities[i]];
+					minIndex = possibilities[i];
 				}
 			}
 
@@ -386,7 +387,7 @@ public class TSPSolver {
 				//int localTreeNode = -1;
 				boolean checkedClose = false;
 				for(int k = 0; k < s; k++) {
-					int cn = nodes[nodeI].closest[k].key.intValue();
+					int cn = nodes[nodeI].closest[k];
 					if(!visited[cn]) {
 						//System.err.println("CLOSE");
 						checkedClose = true;
@@ -566,12 +567,12 @@ public class TSPSolver {
 			int n1n = (inIndex[n1] == n-1 ? path.get(0) : path.get(inIndex[n1]+1));
 			boolean swapped = false;
 			for(int j = 0; j < s; j++) {
-				int n2 = nodes[i].closest[j].key.intValue();
+				int n2 = nodes[i].closest[j];
 				int n2p = (inIndex[n2] == 0 ? path.get(n-1) : path.get(inIndex[n2]-1));
 				int n2n = (inIndex[n2] == n-1 ? path.get(0) : path.get(inIndex[n2]+1));
 				
 				for(int k = j+1; k < s; k++) {
-					int n3 = nodes[i].closest[k].key.intValue();
+					int n3 = nodes[i].closest[k];
 					int n3p = (inIndex[n3] == 0 ? path.get(n-1) : path.get(inIndex[n3]-1));
 					int n3n = (inIndex[n3] == n-1 ? path.get(0) : path.get(inIndex[n3]+1));
 					
@@ -836,7 +837,7 @@ public class TSPSolver {
 				
 				for(int j = 0; j < s; j++) {
 					int jn, js, je;
-					jn = nodes[i].closest[j].key.intValue();
+					jn = nodes[i].closest[j];
 					if(path.inIndex(jn) < path.inIndex(i)) {
 						je = jn;
 						js = path.getPrevNode(je);
@@ -943,12 +944,12 @@ public class TSPSolver {
 		//ArrayList<Integer> allClosest = new ArrayList<Integer>();
 		int s = nodes[edge].closest.length;
 		for(int i = 0; i < s; i++) {
-			int node = nodes[edgeS].closest[i].key.intValue();
+			int node = nodes[edgeS].closest[i];
 			if(node != edgeE) {
 				addIfNotIn(closestEdges,node);
 				addIfNotIn(closestEdges,path.getPrevNode(node));
 			}
-			node = nodes[edgeE].closest[i].key.intValue();
+			node = nodes[edgeE].closest[i];
 			if(node != edgeS) {
 				addIfNotIn(closestEdges,node);
 				addIfNotIn(closestEdges,path.getPrevNode(node));

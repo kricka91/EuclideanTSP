@@ -178,17 +178,14 @@ public class Main {
 		}
 		path = new Path(a);
 		*/
-		
 
         path = tsp.getInitialPath(nodes);
-       // addPartRes("     NN", path);
-        
+        // addPartRes("     NN", path);
         //createTimeStamp("init");
-        tsp.f3Opt(path, nodes, 100);
-       // addPartRes("3 opt initial", path);
-        //createTimeStamp("initial path");
         
-
+        tsp.f3Opt(path, nodes, 100);
+        addPartRes("3 opt initial", path);
+        createTimeStamp("3 opt initial path");
         
         long pLen = tsp.getPathLength(path, nodes);
         //System.err.println("initial length: " + pLen);
@@ -199,19 +196,19 @@ public class Main {
         int iters = 0;
         int improvs = 0;
         while(System.currentTimeMillis() - stamp < 1250) {
-                //make a few... adjustments huehue
-                Path ptmp = (Path) path.clone();
-                ptmp.swap(r.nextInt(n), r.nextInt(n));
-                ptmp.swap(r.nextInt(n), r.nextInt(n));
-                tsp.f3Opt(ptmp, nodes, 50);
-                long tmpLen = tsp.getPathLength(ptmp, nodes);
-                if(tmpLen < pLen) {
-                        path = (Path) ptmp.clone();
-                        pLen = tmpLen;
-                        improvs++;
-                        //addPartRes("improvement made!", path);
-                }
-                iters++;
+            //make a few... adjustments huehue
+            Path ptmp = (Path) path.clone();
+            ptmp.swap(r.nextInt(n), r.nextInt(n));
+            ptmp.swap(r.nextInt(n), r.nextInt(n));
+            tsp.f3Opt(ptmp, nodes, 50);
+            long tmpLen = tsp.getPathLength(ptmp, nodes);
+            if(tmpLen < pLen) {
+                path = (Path) ptmp.clone();
+                pLen = tmpLen;
+                improvs++;
+                //addPartRes("improvement made!", path);
+            }
+            iters++;
         }
 		//addPartRes("final path", path);
 		//createTimeStamp("loop");
@@ -303,12 +300,8 @@ public class Main {
 		//System.err.println("length of 2opted convex path: " + tsp.getPathLength(completePath, nodes));
 		//tsp.s3opt(completePath, nodes);
 		//System.err.println("length of 3opted convex path: " + tsp.getPathLength(completePath, nodes));
-		
-		
-		
-		
-		
-		
+
+
 		if(drawSolution) {
 			Graphical g = new Graphical(nodes);
 			g.updateContent(partRes, partResNames);
@@ -335,3 +328,4 @@ public class Main {
 	}
 	
 }
+

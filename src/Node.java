@@ -9,7 +9,7 @@ public class Node {
 	public static final double INVSQRT2 = 1.0/Math.sqrt(2.0);
 	
 	int[] distances;
-	Pair<Integer, Integer>[] closest;
+	int[] closest;
 	
 	//Constructor
 	//n = number of nodes
@@ -60,13 +60,13 @@ public class Node {
 		    x = n-1;
 		}
 		
-		closest = (Pair<Integer, Integer>[])new Pair<?,?>[x];
+		closest = new int[x];
 		int i;
 		int numPlaced = 0;
 		int worst = Integer.MIN_VALUE;
 		for(i = 0; numPlaced < x; i++) {
 			if(i != index) {
-				closest[numPlaced] = new Pair(new Integer(i), new Integer(distances[i]));
+				closest[numPlaced] = i;
 				numPlaced++;
 				if(distances[i] > worst)
 					worst = distances[i];
@@ -82,19 +82,18 @@ public class Node {
 				int worstDist = Integer.MIN_VALUE;
 				int worstIndex = -1;
 				for(int j = 0; j < x; j++) {
-					if(distances[closest[j].key] > worstDist) {
-						worstDist = distances[closest[j].key];
+					if(distances[closest[j]] > worstDist) {
+						worstDist = distances[closest[j]];
 						worstIndex = j;
 					}
 				}
 				
 				if(distances[i] < worstDist) {
-					closest[worstIndex] = new Pair(new Integer(i), new Integer(distances[i]));
-					
+					closest[worstIndex] = i;
 					worst = Integer.MIN_VALUE;
 					for(int j = 0; j < x; j++) {
-						if(distances[closest[j].key] > worst) {
-							worst = distances[closest[j].key];
+						if(distances[closest[j]] > worst) {
+							worst = distances[closest[j]];
 						}
 					}
 					
@@ -104,14 +103,8 @@ public class Node {
 				
 			}
 		}
-		//Main.createTimeStamp("calcing closest");
-		//Arrays.sort(closest, new Pair().new ValueComparator());
-		//Main.createTimeStamp("sorting");
 	}
-	
-	
-	
-	
+
 	public static void calcAllDistances(Node[] allNodes) {
 		int n = allNodes.length;
 		for(int i = 0; i < n; i++) {

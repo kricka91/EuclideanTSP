@@ -10,8 +10,6 @@ class Node;
 
 using namespace std;
 
-bool improv;
-
 Path solve(vector<Node> allNodes);
 Path getInitialPath(vector<Node> allNodes);
 Path nearestNeighbor(vector<Node> allNodes, int startNode);

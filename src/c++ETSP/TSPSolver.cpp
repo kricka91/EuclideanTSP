@@ -19,6 +19,8 @@ using namespace std;
 class Path;
 class Node;
 
+bool improv;
+
 Path solve(vector<Node> allNodes) {
 	
 	int n = allNodes.size();
@@ -78,7 +80,7 @@ Path nearestNeighbor(vector<Node> allNodes, int startNode) {
 	
 	for(int i = 1; i < n; i++) {
 		//find closest
-		short closest = findClosest(allNodes[last].closest, allNodes[last], used);
+		int closest = findClosest(allNodes[last].closest, allNodes[last], used);
 		if(closest == -1) {
 			closest = findClosest(allNodes[last], used);
 		}
@@ -90,7 +92,7 @@ Path nearestNeighbor(vector<Node> allNodes, int startNode) {
 	return Path(pathA,inIndex);
 }
 
-int findClosest(vector<int> possibilities, Node node, bool used[]) {
+int findClosest(vector<short> possibilities, Node node, bool used[]) {
 	int minDist = MAX_INT;
 	int minIndex = -1;
 	//System.err.println("possibilities is of length: " + possibilities.size());

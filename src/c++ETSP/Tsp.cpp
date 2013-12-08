@@ -31,20 +31,43 @@ void readData(vector<Node> nodes) {
 	scanf("%d", &n);
 	nodes.reserve(n);
 	for(int i = 0; i < n; i++) {
-		scanf("%lg %lg", x, y);
+		scanf("%lg %lg", &x, &y);
 		nodes[i] = Node(x,y,n,i);
 	}		
 }
 
-
-int main() {
+vector<Node>& genRandomProblem(int n) {
+	vector<Node> nodes = vector<Node>();
 	srand(time(NULL));
+	double x, y;
+	for(int i = 0; i < n; i++) {
+		x = ((double)rand()/(double)(RAND_MAX))*1000000;
+		y = ((double)rand()/(double)(RAND_MAX))*1000000; 
+		nodes.push_back(Node(x,y,n,i));
+	}
+	return nodes;
+}
+
+int main(int argc, char** argv) {
+	srand(time(NULL));
+	
+	vector<Node> nodes;
+	
+	if (argc > 1) {
+		if (argv[0] = "gen") {
+			nodes = genRandomProblem(100);
+		}
+	} else {
+		readData(nodes);
+	}
+	
+	
 	if (measureTime) {
 
 	}
 	
-	vector<Node> nodes;
-	readData(nodes);
+	
+	
 	int n = nodes.size();
 	
 	Path path;
